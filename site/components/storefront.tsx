@@ -8,6 +8,17 @@ import type { Catalog, Locale, Vegetable } from "@/lib/types";
 
 type StorefrontProps = { catalog: Catalog; isDemo: boolean };
 
+type ModelContext = {
+  registerTool: (tool: {
+    name: string;
+    title: string;
+    description: string;
+    inputSchema: object;
+    annotations: { readOnlyHint: true; untrustedContentHint: false };
+    execute: () => unknown;
+  }, options: { signal: AbortSignal }) => void | Promise<void>;
+};
+
 const copy = {
   th: {
     mission: "ภารกิจวันนี้", heroTitle: "ผักสดที่พร้อม\nออกผจญภัยกับคุณ", heroDescription: "ผักไฮโดรโปนิกส์เก็บสดจากสวน KENDO FARM ในเช้าวันนี้ เลือกคู่หูสีเขียวของคุณ แล้วทักเราใน LINE ได้เลย", explore: "สำรวจผักวันนี้", trustOne: "ปลูกแบบไฮโดรโปนิกส์", trustTwo: "เก็บสดทุกเช้า", trustThree: "ราคาโปร่งใส", today: "เสบียงวันนี้", todayTitle: "เลือกคู่หูสีเขียวของคุณ", todayDescription: "ทุกถุงคัดสดจากสวนและพร้อมให้คุณพากลับบ้าน", updated: "อัปเดตล่าสุด", bagsLeft: "เหลือ", bags: "ถุง", bahtPerBag: "บาท / ถุง", ready: "พร้อมเก็บเกี่ยว", chat: "ทัก LINE เรื่องผักนี้", lineMissing: "กำลังตั้งค่า LINE", emptyTitle: "สวนกำลังเตรียมรอบใหม่", emptyDescription: "วันนี้ยังไม่มีผักพร้อมขาย ลองกลับมาใหม่เร็ว ๆ นี้นะ", demo: "นี่คือรายการตัวอย่าง — เข้าหลังบ้านเพื่อใส่ผักจริง", footer: "ปลูกด้วยความใส่ใจ ส่งต่อความสดถึงคุณ", farm: "สวนผักไฮโดรโปนิกส์", contactMessage: (name: string) => `สวัสดีค่ะ/ครับ สนใจผัก ${name} ของ KENDO FARM ค่ะ/ครับ`,
@@ -43,6 +54,24 @@ export function Storefront({ catalog, isDemo }: StorefrontProps) {
     const saved = window.localStorage.getItem("kendo-locale");
     if (saved === "th" || saved === "en") setLocale(saved);
   }, []);
+
+  useEffect(() => {
+    const context = (document as Document & { modelContext?: ModelContext }).modelContext;
+    if (!context) return;
+    const controller = new AbortController();
+    void Promise.resolve(context.registerTool({
+      name: "get_todays_hydroponic_harvest",
+      title: "Get today's KENDO FARM harvest",
+      description: "Read the vegetable varieties currently shown as available in the KENDO FARM storefront.",
+      inputSchema: { type: "object", properties: {}, additionalProperties: false },
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute: () => ({
+        updatedAt: catalog.settings.updatedAt,
+        vegetables: catalog.vegetables.map((item) => ({ nameTh: item.nameTh, nameEn: item.nameEn, priceBaht: item.priceBaht, stockBags: item.stockBags })),
+      }),
+    }, { signal: controller.signal })).catch(() => undefined);
+    return () => controller.abort();
+  }, [catalog]);
 
   function changeLocale(next: Locale) {
     setLocale(next);

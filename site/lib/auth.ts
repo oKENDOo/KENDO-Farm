@@ -18,6 +18,10 @@ function config() {
   return { url, anonKey };
 }
 
+export function isAuthConfigured() {
+  return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY && allowedEmails().size);
+}
+
 function allowedEmails() {
   return new Set((process.env.ADMIN_EMAILS ?? "").split(",").map((email) => email.trim().toLowerCase()).filter(Boolean));
 }
@@ -63,6 +67,7 @@ function ensureAllowed(user: SupabaseUser) {
 }
 
 export async function requireAdmin(request: NextRequest) {
+  config();
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (!token) throw new AuthError("Please sign in to continue.", 401);
   return ensureAllowed(await getUser(token));
