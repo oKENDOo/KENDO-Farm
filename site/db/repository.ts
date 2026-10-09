@@ -11,6 +11,7 @@ type VegetableRow = {
   price_baht: number;
   stock_bags: number;
   display_order: number;
+  image_url: string | null;
   updated_at: string;
 };
 
@@ -36,8 +37,15 @@ const DEFAULT_SETTINGS: FarmSettings = {
 
 const vegetableColumns = `
   id, name_th, name_en, description_th, description_en,
-  price_baht, stock_bags, display_order, updated_at
+  price_baht, stock_bags, display_order, image_url, updated_at
 `;
+
+const DEFAULT_IMAGE_URLS: Record<string, string> = {
+  "green-oak": "/farm/harvest-basket.png",
+  "red-oak": "/farm/hydroponic-rows.png",
+  butterhead: "/farm/mother-in-garden.png",
+  kale: "/farm/greenhouse-harvest.png",
+};
 
 function toVegetable(row: VegetableRow): Vegetable {
   return {
@@ -49,6 +57,7 @@ function toVegetable(row: VegetableRow): Vegetable {
     priceBaht: row.price_baht,
     stockBags: row.stock_bags,
     displayOrder: row.display_order,
+    imageUrl: row.image_url || DEFAULT_IMAGE_URLS[row.id] || null,
     updatedAt: row.updated_at,
   };
 }
@@ -104,7 +113,7 @@ export async function createVegetable(input: Vegetable): Promise<Vegetable> {
   const updatedAt = new Date().toISOString();
   await db
     .prepare(
-      `INSERT INTO vegetables (${vegetableColumns}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO vegetables (${vegetableColumns}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .bind(
       input.id,
@@ -115,6 +124,7 @@ export async function createVegetable(input: Vegetable): Promise<Vegetable> {
       input.priceBaht,
       input.stockBags,
       input.displayOrder,
+      input.imageUrl,
       updatedAt,
     )
     .run();
@@ -129,7 +139,7 @@ export async function updateVegetable(input: Vegetable): Promise<Vegetable> {
     .prepare(
       `UPDATE vegetables
        SET name_th = ?, name_en = ?, description_th = ?, description_en = ?,
-           price_baht = ?, stock_bags = ?, display_order = ?, updated_at = ?
+           price_baht = ?, stock_bags = ?, display_order = ?, image_url = ?, updated_at = ?
        WHERE id = ?`,
     )
     .bind(
@@ -140,6 +150,7 @@ export async function updateVegetable(input: Vegetable): Promise<Vegetable> {
       input.priceBaht,
       input.stockBags,
       input.displayOrder,
+      input.imageUrl,
       updatedAt,
       input.id,
     )
@@ -183,8 +194,8 @@ export async function seedStarterCatalog() {
   const now = new Date().toISOString();
   const statements = demoCatalog.vegetables.map((item) =>
     db
-      .prepare(`INSERT INTO vegetables (${vegetableColumns}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(item.id, item.nameTh, item.nameEn, item.descriptionTh, item.descriptionEn, item.priceBaht, item.stockBags, item.displayOrder, now),
+      .prepare(`INSERT INTO vegetables (${vegetableColumns}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .bind(item.id, item.nameTh, item.nameEn, item.descriptionTh, item.descriptionEn, item.priceBaht, item.stockBags, item.displayOrder, item.imageUrl, now),
   );
   statements.push(
     db

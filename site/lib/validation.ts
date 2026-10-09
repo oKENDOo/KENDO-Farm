@@ -8,6 +8,7 @@ export const vegetableInput = z.object({
   priceBaht: z.number().int().min(0).max(100000),
   stockBags: z.number().int().min(0).max(100000),
   displayOrder: z.number().int().min(0).max(10000),
+  imageUrl: z.string().max(2_000_000).nullable().default(null),
 });
 
 export const settingsInput = z.object({

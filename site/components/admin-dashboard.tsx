@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { CheckCircle2, Leaf, LoaderCircle, LogOut, Pencil, Plus, Save, Settings2, ShieldCheck, Sprout, Trash2, TriangleAlert } from "lucide-react";
+import { CheckCircle2, ImagePlus, Leaf, LoaderCircle, LogOut, Pencil, Plus, Save, Settings2, ShieldCheck, Sprout, Trash2, TriangleAlert, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,14 +12,14 @@ import type { Catalog, FarmSettings, Locale, Vegetable } from "@/lib/types";
 type Session = { id: string; email: string };
 type Draft = Omit<Vegetable, "id" | "updatedAt">;
 
-const emptyDraft: Draft = { nameTh: "", nameEn: "", descriptionTh: "", descriptionEn: "", priceBaht: 45, stockBags: 0, displayOrder: 1 };
+const emptyDraft: Draft = { nameTh: "", nameEn: "", descriptionTh: "", descriptionEn: "", priceBaht: 45, stockBags: 0, displayOrder: 1, imageUrl: null };
 
 const copy = {
   th: {
-    eyebrow: "พื้นที่ผู้ดูแล", title: "สวัสดีทีมสวน", subtitle: "จัดผัก ราคา และจำนวนคงเหลือ แล้วหน้าร้านจะเปลี่ยนทันที", signIn: "เข้าสู่หลังบ้าน", email: "อีเมลผู้ดูแล", password: "รหัสผ่าน", enter: "เข้าสู่ระบบ", reset: "ส่งลิงก์ตั้งรหัสใหม่", resetSent: "ส่งลิงก์ตั้งรหัสผ่านใหม่แล้ว", setup: "ยังไม่ได้เชื่อมระบบหลังบ้าน", setupDesc: "เพิ่มค่า Supabase และอีเมลผู้ดูแลในตัวแปรลับของเว็บไซต์ก่อนเริ่มใช้งาน", inventory: "รายการผัก", inventoryDesc: "สินค้าที่เหลือ 0 ถุงจะไม่แสดงให้ลูกค้าเห็น", add: "เพิ่มผัก", starter: "เพิ่มรายการตัวอย่าง", settings: "ตั้งค่าฟาร์ม", save: "บันทึก", cancel: "ยกเลิก", edit: "แก้ไข", delete: "ลบ", deleteTitle: "ลบรายการผักนี้?", deleteDesc: "รายการจะหายจากหลังบ้านและหน้าร้านทันที", confirmDelete: "ลบรายการ", fieldNameTh: "ชื่อผัก (ไทย)", fieldNameEn: "ชื่อผัก (English)", fieldDescTh: "รายละเอียด (ไทย)", fieldDescEn: "Description (English)", price: "ราคา (บาท/ถุง)", stock: "จำนวนคงเหลือ (ถุง)", order: "ลำดับแสดงผล", farmTh: "ชื่อฟาร์ม (ไทย)", farmEn: "Farm name (English)", lineType: "ประเภทบัญชี LINE", linePersonal: "LINE ส่วนตัว (เปิดโปรไฟล์)", lineOfficial: "LINE Official Account (เติมข้อความอัตโนมัติ)", line: "LINE ID", lineHelp: "LINE ส่วนตัวจะเปิดโปรไฟล์ ส่วน Official Account จะเติมข้อความชื่อผักให้ลูกค้าอัตโนมัติ", signedIn: "เข้าสู่ระบบแล้ว", logout: "ออกจากระบบ", live: "แสดงหน้าร้าน", hidden: "ซ่อนจากหน้าร้าน", error: "เกิดข้อผิดพลาด", demo: "ยังไม่มีข้อมูลในฐานข้อมูล", demoDesc: "เพิ่มตัวอย่าง 4 รายการเพื่อเริ่มแก้ไขได้ทันที", formTitle: "แก้ไขรายการผัก", newTitle: "เพิ่มผักใหม่", saveVegetable: "บันทึกรายการผัก", created: "บันทึกแล้ว", bags: "ถุง",
+    eyebrow: "พื้นที่ผู้ดูแล", title: "สวัสดีทีมสวน", subtitle: "จัดผัก ราคา และจำนวนคงเหลือ แล้วหน้าร้านจะเปลี่ยนทันที", signIn: "เข้าสู่หลังบ้าน", email: "อีเมลผู้ดูแล", password: "รหัสผ่าน", enter: "เข้าสู่ระบบ", reset: "ส่งลิงก์ตั้งรหัสใหม่", resetSent: "ส่งลิงก์ตั้งรหัสผ่านใหม่แล้ว", setup: "ยังไม่ได้เชื่อมระบบหลังบ้าน", setupDesc: "เพิ่มค่า Supabase และอีเมลผู้ดูแลในตัวแปรลับของเว็บไซต์ก่อนเริ่มใช้งาน", inventory: "รายการผัก", inventoryDesc: "สินค้าที่เหลือ 0 ถุงจะไม่แสดงให้ลูกค้าเห็น", add: "เพิ่มผัก", starter: "เพิ่มรายการตัวอย่าง", settings: "ตั้งค่าฟาร์ม", save: "บันทึก", cancel: "ยกเลิก", edit: "แก้ไข", delete: "ลบ", deleteTitle: "ลบรายการผักนี้?", deleteDesc: "รายการจะหายจากหลังบ้านและหน้าร้านทันที", confirmDelete: "ลบรายการ", fieldNameTh: "ชื่อผัก (ไทย)", fieldNameEn: "ชื่อผัก (English)", fieldDescTh: "รายละเอียด (ไทย)", fieldDescEn: "Description (English)", price: "ราคา (บาท/ถุง)", stock: "จำนวนคงเหลือ (ถุง)", order: "ลำดับแสดงผล", image: "รูปผัก", imagePick: "เลือกรูปจากเครื่อง", imageRemove: "เอารูปออก", imageHelp: "รูปจะถูกย่อและเก็บไปกับรายการผัก ไม่ต้องใช้พื้นที่เพิ่ม", farmTh: "ชื่อฟาร์ม (ไทย)", farmEn: "Farm name (English)", lineType: "ประเภทบัญชี LINE", linePersonal: "LINE ส่วนตัว (เปิดโปรไฟล์)", lineOfficial: "LINE Official Account (เติมข้อความอัตโนมัติ)", line: "LINE ID", lineHelp: "LINE ส่วนตัวจะเปิดโปรไฟล์ ส่วน Official Account จะเติมข้อความชื่อผักให้ลูกค้าอัตโนมัติ", signedIn: "เข้าสู่ระบบแล้ว", logout: "ออกจากระบบ", live: "แสดงหน้าร้าน", hidden: "ซ่อนจากหน้าร้าน", error: "เกิดข้อผิดพลาด", demo: "ยังไม่มีข้อมูลในฐานข้อมูล", demoDesc: "เพิ่มตัวอย่าง 4 รายการเพื่อเริ่มแก้ไขได้ทันที", formTitle: "แก้ไขรายการผัก", newTitle: "เพิ่มผักใหม่", saveVegetable: "บันทึกรายการผัก", created: "บันทึกแล้ว", bags: "ถุง",
   },
   en: {
-    eyebrow: "FARM TEAM", title: "Hello, garden team", subtitle: "Update vegetables, prices, and stock. The shop changes right away.", signIn: "Sign in to the dashboard", email: "Admin email", password: "Password", enter: "Sign in", reset: "Send password reset link", resetSent: "Password reset link sent", setup: "The dashboard is not connected yet", setupDesc: "Add the Supabase values and approved farm emails to this site's secret environment settings.", inventory: "Vegetable inventory", inventoryDesc: "Items with zero bags are hidden from customers.", add: "Add vegetable", starter: "Add starter vegetables", settings: "Farm settings", save: "Save changes", cancel: "Cancel", edit: "Edit", delete: "Delete", deleteTitle: "Delete this vegetable?", deleteDesc: "It will disappear from both the dashboard and the public shop right away.", confirmDelete: "Delete vegetable", fieldNameTh: "Vegetable name (Thai)", fieldNameEn: "Vegetable name (English)", fieldDescTh: "Description (Thai)", fieldDescEn: "Description (English)", price: "Price (THB / bag)", stock: "Stock remaining (bags)", order: "Display order", farmTh: "Farm name (Thai)", farmEn: "Farm name (English)", lineType: "LINE account type", linePersonal: "Personal LINE (open profile)", lineOfficial: "LINE Official Account (prefill message)", line: "LINE ID", lineHelp: "Personal LINE opens the profile; an Official Account can prefill the vegetable message.", signedIn: "Signed in", logout: "Sign out", live: "Visible in shop", hidden: "Hidden from shop", error: "Something went wrong", demo: "Your D1 database is empty", demoDesc: "Add four editable starter vegetables to begin.", formTitle: "Edit vegetable", newTitle: "Add a vegetable", saveVegetable: "Save vegetable", created: "Saved", bags: "bags",
+    eyebrow: "FARM TEAM", title: "Hello, garden team", subtitle: "Update vegetables, prices, and stock. The shop changes right away.", signIn: "Sign in to the dashboard", email: "Admin email", password: "Password", enter: "Sign in", reset: "Send password reset link", resetSent: "Send password reset link", setup: "The dashboard is not connected yet", setupDesc: "Add the Supabase values and approved farm emails to this site's secret environment settings.", inventory: "Vegetable inventory", inventoryDesc: "Items with zero bags are hidden from customers.", add: "Add vegetable", starter: "Add starter vegetables", settings: "Farm settings", save: "Save changes", cancel: "Cancel", edit: "Edit", delete: "Delete", deleteTitle: "Delete this vegetable?", deleteDesc: "It will disappear from both the dashboard and the public shop right away.", confirmDelete: "Delete vegetable", fieldNameTh: "Vegetable name (Thai)", fieldNameEn: "Vegetable name (English)", fieldDescTh: "Description (Thai)", fieldDescEn: "Description (English)", price: "Price (THB / bag)", stock: "Stock remaining (bags)", order: "Display order", image: "Vegetable photo", imagePick: "Choose a photo", imageRemove: "Remove photo", imageHelp: "The photo is resized and stored with this vegetable; no extra storage service is needed.", farmTh: "Farm name (Thai)", farmEn: "Farm name (English)", lineType: "LINE account type", linePersonal: "Personal LINE (open profile)", lineOfficial: "LINE Official Account (prefill message)", line: "LINE ID", lineHelp: "Personal LINE opens the profile; an Official Account can prefill the vegetable message.", signedIn: "Signed in", logout: "Sign out", live: "Visible in shop", hidden: "Hidden from shop", error: "Something went wrong", demo: "Your D1 database is empty", demoDesc: "Add four editable starter vegetables to begin.", formTitle: "Edit vegetable", newTitle: "Add a vegetable", saveVegetable: "Save vegetable", created: "Saved", bags: "bags",
   },
 } as const;
 
@@ -67,6 +67,46 @@ export function AdminDashboard() {
   function switchLocale(next: Locale) {
     setLocale(next);
     window.localStorage.setItem("kendo-locale", next);
+  }
+
+  async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file || !draft) return;
+    if (!file.type.startsWith("image/")) {
+      setError(text.imageHelp);
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const source = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("Unable to read the image."));
+        reader.readAsDataURL(file);
+      });
+      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const preview = new window.Image();
+        preview.onload = () => resolve(preview);
+        preview.onerror = () => reject(new Error("Unable to open the image."));
+        preview.src = source;
+      });
+      const maxEdge = 1200;
+      const scale = Math.min(1, maxEdge / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Unable to prepare the image.");
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      const compressed = canvas.toDataURL("image/jpeg", 0.82);
+      setDraft((current) => current ? { ...current, imageUrl: compressed } : current);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : text.error);
+    } finally {
+      event.target.value = "";
+      setBusy(false);
+    }
   }
 
   async function signIn(event: FormEvent) {
@@ -123,7 +163,9 @@ export function AdminDashboard() {
 
   const field = (key: keyof Draft, label: string, kind: "input" | "textarea" = "input", type = "text") => {
     const props = { value: String(draft?.[key] ?? ""), onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDraft((current) => current ? { ...current, [key]: type === "number" ? Number(event.target.value) : event.target.value } : current), required: true };
-    return <label className="block text-sm font-bold text-[#315546]"><span className="mb-2 block">{label}</span>{kind === "textarea" ? <Textarea {...props} /> : <Input {...props} type={type} min={type === "number" ? 0 : undefined} />}</label>;
+    const inputField = <label className="block text-sm font-bold text-[#315546]"><span className="mb-2 block">{label}</span>{kind === "textarea" ? <Textarea {...props} /> : <Input {...props} type={type} min={type === "number" ? 0 : undefined} />}</label>;
+    if (key !== "displayOrder") return inputField;
+    return <><>{inputField}</><div className="space-y-2 rounded-2xl border border-dashed border-[#cbd8b5] bg-[#f6faea] p-4 md:col-span-2"><div className="flex items-center gap-2 text-sm font-bold text-[#315546]"><ImagePlus className="h-4 w-4" />{text.image}</div>{draft?.imageUrl ? <div className="relative overflow-hidden rounded-xl border border-[#dce5c4] bg-white"><img src={draft.imageUrl} alt={text.image} className="h-44 w-full object-cover" /><Button type="button" variant="outline" size="sm" onClick={() => setDraft((current) => current ? { ...current, imageUrl: null } : current)} className="absolute right-3 top-3 bg-white/90"><X /> {text.imageRemove}</Button></div> : <div className="grid h-36 place-items-center rounded-xl border border-[#e0e8d1] bg-white text-center text-sm text-[#637568]"><div><ImagePlus className="mx-auto mb-2 h-7 w-7 text-[#70945a]" /><p>{text.imagePick}</p></div></div>}<Input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void handleImageChange(event)} disabled={busy} /><p className="text-xs leading-5 text-[#637568]">{text.imageHelp}</p></div></>;
   };
 
   return <main className="min-h-screen bg-[#f6f2e8] px-4 py-5 text-[#173529] sm:px-8 sm:py-8">

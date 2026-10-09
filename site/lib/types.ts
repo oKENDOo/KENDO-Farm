@@ -10,6 +10,7 @@ export type Vegetable = {
   priceBaht: number;
   stockBags: number;
   displayOrder: number;
+  imageUrl: string | null;
   updatedAt: string;
 };
 

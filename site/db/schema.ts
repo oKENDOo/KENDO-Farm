@@ -12,6 +12,7 @@ export const vegetables = sqliteTable(
     priceBaht: integer("price_baht").notNull(),
     stockBags: integer("stock_bags").notNull().default(0),
     displayOrder: integer("display_order").notNull().default(0),
+    imageUrl: text("image_url"),
     updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   },
   (table) => [
