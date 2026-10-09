@@ -1,6 +1,6 @@
 import { getD1 } from "@/db";
 import { demoCatalog } from "@/lib/demo-catalog";
-import type { Catalog, FarmSettings, Vegetable } from "@/lib/types";
+import type { Catalog, FarmSettings, LineAccountType, Vegetable } from "@/lib/types";
 
 type VegetableRow = {
   id: string;
@@ -18,13 +18,19 @@ type SettingsRow = {
   farm_name_th: string;
   farm_name_en: string;
   line_official_id: string;
+  line_account_type: string;
   updated_at: string;
 };
+
+function defaultLineId() {
+  return process.env.LINE_DEFAULT_ID?.trim() ?? "";
+}
 
 const DEFAULT_SETTINGS: FarmSettings = {
   farmNameTh: "KENDO FARM",
   farmNameEn: "KENDO FARM",
-  lineOfficialId: "",
+  lineOfficialId: defaultLineId(),
+  lineAccountType: "personal",
   updatedAt: new Date().toISOString(),
 };
 
@@ -53,7 +59,8 @@ function toSettings(row: SettingsRow | null): FarmSettings {
   return {
     farmNameTh: row.farm_name_th,
     farmNameEn: row.farm_name_en,
-    lineOfficialId: row.line_official_id,
+    lineOfficialId: row.line_official_id.trim() || defaultLineId(),
+    lineAccountType: (row.line_account_type === "official" ? "official" : "personal") as LineAccountType,
     updatedAt: row.updated_at,
   };
 }
@@ -62,7 +69,7 @@ export async function getCatalog(): Promise<Catalog> {
   const db = getD1();
   const [settingsResult, vegetablesResult] = await db.batch([
     db.prepare(
-      "SELECT farm_name_th, farm_name_en, line_official_id, updated_at FROM farm_settings WHERE id = 1",
+      "SELECT farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at FROM farm_settings WHERE id = 1",
     ),
     db
       .prepare(
@@ -81,7 +88,7 @@ export async function getAdminCatalog(): Promise<Catalog> {
   const db = getD1();
   const [settingsResult, vegetablesResult] = await db.batch([
     db.prepare(
-      "SELECT farm_name_th, farm_name_en, line_official_id, updated_at FROM farm_settings WHERE id = 1",
+      "SELECT farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at FROM farm_settings WHERE id = 1",
     ),
     db.prepare(`SELECT ${vegetableColumns} FROM vegetables ORDER BY display_order ASC, name_th ASC`),
   ]);
@@ -153,15 +160,16 @@ export async function saveFarmSettings(input: Omit<FarmSettings, "updatedAt">) {
   const updatedAt = new Date().toISOString();
   await db
     .prepare(
-      `INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, updated_at)
-       VALUES (1, ?, ?, ?, ?)
+      `INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at)
+       VALUES (1, ?, ?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          farm_name_th = excluded.farm_name_th,
          farm_name_en = excluded.farm_name_en,
          line_official_id = excluded.line_official_id,
+         line_account_type = excluded.line_account_type,
          updated_at = excluded.updated_at`,
     )
-    .bind(input.farmNameTh, input.farmNameEn, input.lineOfficialId, updatedAt)
+    .bind(input.farmNameTh, input.farmNameEn, input.lineOfficialId, input.lineAccountType, updatedAt)
     .run();
 
   return { ...input, updatedAt };
@@ -180,8 +188,8 @@ export async function seedStarterCatalog() {
   );
   statements.push(
     db
-      .prepare(`INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, updated_at) VALUES (1, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING`)
-      .bind(demoCatalog.settings.farmNameTh, demoCatalog.settings.farmNameEn, "", now),
+      .prepare(`INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at) VALUES (1, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING`)
+      .bind(demoCatalog.settings.farmNameTh, demoCatalog.settings.farmNameEn, demoCatalog.settings.lineOfficialId || defaultLineId(), demoCatalog.settings.lineAccountType, now),
   );
   await db.batch(statements);
   return getAdminCatalog();

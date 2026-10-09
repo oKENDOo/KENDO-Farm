@@ -14,4 +14,5 @@ export const settingsInput = z.object({
   farmNameTh: z.string().trim().min(1).max(80),
   farmNameEn: z.string().trim().min(1).max(80),
   lineOfficialId: z.string().trim().max(120),
+  lineAccountType: z.enum(["personal", "official"]),
 });

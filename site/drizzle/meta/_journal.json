@@ -15,6 +15,13 @@
       "when": 1791542800000,
       "tag": "0001_seed_kendo_farm_catalog",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791544200000,
+      "tag": "0002_add_line_account_type",
+      "breakpoints": true
     }
   ]
 }

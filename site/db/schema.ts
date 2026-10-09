@@ -25,5 +25,6 @@ export const farmSettings = sqliteTable("farm_settings", {
   farmNameTh: text("farm_name_th").notNull(),
   farmNameEn: text("farm_name_en").notNull(),
   lineOfficialId: text("line_official_id").notNull(),
+  lineAccountType: text("line_account_type").notNull().default("personal"),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });

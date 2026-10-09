@@ -4,7 +4,8 @@ export const demoCatalog: Catalog = {
   settings: {
     farmNameTh: "KENDO FARM",
     farmNameEn: "KENDO FARM",
-    lineOfficialId: "",
+    lineOfficialId: "kendozaza14271",
+    lineAccountType: "personal",
     updatedAt: "2026-10-09T08:30:00.000Z",
   },
   vegetables: [

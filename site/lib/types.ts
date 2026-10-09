@@ -1,4 +1,5 @@
 export type Locale = "th" | "en";
+export type LineAccountType = "personal" | "official";
 
 export type Vegetable = {
   id: string;
@@ -16,6 +17,7 @@ export type FarmSettings = {
   farmNameTh: string;
   farmNameEn: string;
   lineOfficialId: string;
+  lineAccountType: LineAccountType;
   updatedAt: string;
 };
 
