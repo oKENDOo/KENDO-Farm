@@ -27,21 +27,7 @@ const copy = {
   },
 } as const;
 
-const farmPhotos = [
-  { src: "/farm/harvest-basket.png", alt: "Harvest basket of colourful lettuce", className: "sm:col-span-2 sm:row-span-2" },
-  { src: "/farm/hydroponic-rows.png", alt: "Rows of lettuce in the hydroponic greenhouse", className: "" },
-  { src: "/farm/mother-in-garden.png", alt: "A family member caring for fresh lettuce", className: "" },
-  { src: "/farm/father-seeding.png", alt: "A family member tending young seedlings", className: "" },
-  { src: "/farm/greenhouse-harvest.png", alt: "Wide view of the hydroponic greenhouse", className: "sm:col-span-2" },
-] as const;
-
-const heroPhotos = [
-  { src: "/farm/harvest-basket.png", alt: "Freshly harvested lettuce basket", className: "col-span-2 row-span-2" },
-  { src: "/farm/hydroponic-rows.png", alt: "Hydroponic lettuce rows", className: "" },
-  { src: "/farm/mother-in-garden.png", alt: "Family member in the lettuce garden", className: "" },
-  { src: "/farm/father-seeding.png", alt: "Family member tending seedlings", className: "" },
-  { src: "/farm/greenhouse-harvest.png", alt: "Wide hydroponic greenhouse view", className: "col-span-2 sm:col-span-3" },
-] as const;
+const heroPhoto = { src: "/farm/greenhouse-harvest.png", alt: "Wide view of the KENDO FARM hydroponic greenhouse" } as const;
 
 function textFor(vegetable: Vegetable, locale: Locale) {
   return locale === "th" ? { name: vegetable.nameTh, description: vegetable.descriptionTh } : { name: vegetable.nameEn, description: vegetable.descriptionEn };
@@ -111,8 +97,8 @@ export function Storefront({ catalog, isDemo }: StorefrontProps) {
       </header>
 
       <section id="top" className="relative isolate min-h-[760px] overflow-hidden bg-[#133c2e] sm:min-h-[720px]">
-        <div className="absolute inset-0 grid auto-rows-[150px] grid-cols-2 gap-1 opacity-95 sm:auto-rows-[240px] sm:grid-cols-5">{heroPhotos.map((photo) => <div key={photo.src} className={`relative overflow-hidden ${photo.className}`}><img src={photo.src} alt={photo.alt} className="h-full w-full object-cover saturate-[1.12]" /></div>)}</div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,35,26,.96)_0%,rgba(4,35,26,.83)_28%,rgba(4,35,26,.35)_60%,rgba(4,35,26,.18)_100%)]" />
+        <img src={heroPhoto.src} alt={heroPhoto.alt} className="absolute inset-0 h-full w-full object-cover object-center saturate-[1.12]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,35,26,.96)_0%,rgba(4,35,26,.82)_30%,rgba(4,35,26,.28)_68%,rgba(4,35,26,.12)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(246,242,232,.96)_0%,rgba(246,242,232,0)_18%)]" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#f6f2e8] to-transparent" />
         <div className="relative mx-auto flex min-h-[760px] w-full max-w-[1440px] items-center px-5 pb-16 pt-32 sm:min-h-[720px] sm:px-10 lg:px-14">
@@ -127,11 +113,6 @@ export function Storefront({ catalog, isDemo }: StorefrontProps) {
 
       <section className="relative z-10 mx-auto -mt-12 grid w-[calc(100%-2.5rem)] max-w-5xl grid-cols-1 rounded-[1.75rem] border border-[#d3ddaf] bg-[#fcfdf3] p-3 shadow-[0_18px_50px_rgba(27,62,46,.12)] sm:grid-cols-3 sm:p-4">
         {[[ShieldCheck, text.trustOne], [Sparkles, text.trustTwo], [CircleDollarSign, text.trustThree]].map(([Icon, label], index) => { const FeatureIcon = Icon as typeof ShieldCheck; return <div key={label as string} className={`flex items-center gap-3 rounded-2xl px-4 py-3 ${index < 2 ? "sm:border-r sm:border-[#e6ebd4]" : ""}`}><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#dcf7ae] text-[#19503b]"><FeatureIcon aria-hidden="true" className="h-5 w-5" /></span><span className="text-sm font-bold text-[#214536]">{label as string}</span></div>; })}
-      </section>
-
-      <section className="mx-auto max-w-[1440px] px-5 pb-8 pt-24 sm:px-10 lg:px-14">
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-xs font-black tracking-[0.2em] text-[#598344]">{text.storyEyebrow}</p><h2 className="mt-3 text-3xl font-black tracking-[-.04em] text-[#173529] sm:text-4xl">{text.storyTitle}</h2></div><p className="max-w-md text-sm leading-6 text-[#5c7062] sm:text-base">{text.storyDescription}</p></div>
-        <div className="mt-8 grid auto-rows-[180px] grid-cols-1 gap-4 sm:grid-cols-4 sm:auto-rows-[150px]">{farmPhotos.map((photo) => <figure key={photo.src} className={`group relative overflow-hidden rounded-[1.5rem] border border-[#dce5c4] bg-[#dfe8c6] shadow-[0_12px_30px_rgba(27,62,46,.09)] ${photo.className}`}><img src={photo.src} alt={photo.alt} loading="lazy" className="h-full w-full object-cover saturate-[1.08] transition duration-500 group-hover:scale-105" /></figure>)}</div>
       </section>
 
       <section id="harvest" className="mx-auto max-w-[1440px] px-5 pb-20 pt-20 sm:px-10 lg:px-14">
