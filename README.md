@@ -7,7 +7,6 @@
 - หน้าร้าน: https://kendo-farm.yamrollpoon.chatgpt.site
 - หลังบ้าน: https://kendo-farm.yamrollpoon.chatgpt.site/admin
 
-> URL นี้ใช้ชื่อ Site ที่สั้นและจำง่ายขึ้น ส่วนการเอา suffix ของผู้ให้บริการออกทั้งหมดต้องผูกโดเมนที่ครอบครัวเป็นเจ้าของเองในภายหลัง
 
 ## หน้าร้าน
 
