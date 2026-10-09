@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, ChevronDown, CircleDollarSign, Languages, Leaf, MapPin, MessageCircle, PackageCheck, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Catalog, Locale, Vegetable } from "@/lib/types";
+import type { Catalog, FarmSettings, Locale, Vegetable } from "@/lib/types";
 
 type StorefrontProps = { catalog: Catalog; isDemo: boolean };
 
@@ -40,6 +40,12 @@ function lineUrl(lineId: string, accountType: "personal" | "official", message: 
     return `https://line.me/R/ti/p/~${encodeURIComponent(normalizedId.replace(/^@/, ""))}`;
   }
   return `https://line.me/R/oaMessage/${encodeURIComponent(normalizedId)}/?${encodeURIComponent(message)}`;
+}
+
+function lineMessage(settings: FarmSettings, locale: Locale, name: string) {
+  const fallback = locale === "th" ? `สวัสดีค่ะ/ครับ สนใจผัก ${name} ของ KENDO FARM ค่ะ/ครับ` : `Hello! I am interested in ${name} from KENDO FARM.`;
+  const template = (locale === "th" ? settings.lineMessageTh : settings.lineMessageEn).trim() || fallback;
+  return template.split("{name}").join(name);
 }
 
 function formatUpdated(updatedAt: string, locale: Locale) {
@@ -120,7 +126,7 @@ export function Storefront({ catalog, isDemo }: StorefrontProps) {
         {isDemo && <p className="mt-6 rounded-2xl border border-dashed border-[#bbd482] bg-[#f2f8df] px-4 py-3 text-sm font-medium text-[#42613b]">{text.demo}</p>}
         {catalog.vegetables.length ? <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {catalog.vegetables.map((vegetable, index) => {
-            const item = textFor(vegetable, locale); const chatUrl = lineUrl(catalog.settings.lineOfficialId, catalog.settings.lineAccountType, text.contactMessage(item.name)); const chatLabel = catalog.settings.lineAccountType === "official" ? text.chatOfficial : text.chatPersonal; const accent = ["#d9f99d", "#fecdd3", "#fde68a", "#bbf7d0"][index % 4];
+            const item = textFor(vegetable, locale); const chatUrl = lineUrl(catalog.settings.lineOfficialId, catalog.settings.lineAccountType, lineMessage(catalog.settings, locale, item.name)); const chatLabel = catalog.settings.lineAccountType === "official" ? text.chatOfficial : text.chatPersonal; const accent = ["#d9f99d", "#fecdd3", "#fde68a", "#bbf7d0"][index % 4];
             return <article key={vegetable.id} className="group relative overflow-hidden rounded-[1.5rem] border border-[#dce5c4] bg-[#fffef8] p-5 shadow-[0_8px_24px_rgba(27,62,46,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(27,62,46,.14)]"><div className="absolute right-0 top-0 h-28 w-28 -translate-y-8 translate-x-8 rounded-full opacity-65" style={{ backgroundColor: accent }} /><div className="relative -mx-5 -mt-5 mb-5 h-44 overflow-hidden rounded-t-[1.5rem] bg-[#e8f0d8]">{vegetable.imageUrl ? <img src={vegetable.imageUrl} alt={`${item.name} at KENDO FARM`} loading="lazy" className="h-full w-full object-cover saturate-[1.08] transition duration-500 group-hover:scale-105" /> : <div className="grid h-full place-items-center text-5xl" aria-hidden="true">{index === 0 ? "🥬" : index === 1 ? "🥗" : index === 2 ? "🌿" : "🍃"}</div>}<span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#174e3a]/90 px-3 py-1.5 text-[10px] font-black tracking-[.12em] text-[#ecffad] shadow-lg"><Check aria-hidden="true" className="h-3 w-3" /> {text.ready}</span></div><div className="relative"><h3 className="text-2xl font-black tracking-[-.035em] text-[#1c392d]">{item.name}</h3><p className="mt-2 min-h-12 text-sm leading-5 text-[#637568]">{item.description}</p></div><div className="relative mt-5 flex items-end justify-between border-t border-[#e6ead9] pt-4"><div><p className="text-2xl font-black tracking-[-.04em] text-[#174e3a]">{formatPrice(vegetable.priceBaht, locale)}</p><p className="text-xs font-semibold text-[#698072]">{text.bahtPerBag}</p></div><p className="rounded-xl bg-[#f0f7d8] px-2.5 py-2 text-xs font-extrabold text-[#42613b]">{text.bagsLeft} {vegetable.stockBags} {text.bags}</p></div>{chatUrl ? <a href={chatUrl} target="_blank" rel="noreferrer" className="relative mt-5 flex w-full"><Button className="h-11 w-full rounded-xl bg-[#1aab59] text-sm font-extrabold text-white hover:bg-[#148e49]"><MessageCircle aria-hidden="true" className="mr-2 h-4 w-4" />{chatLabel} <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" /></Button></a> : <Button disabled className="relative mt-5 h-11 w-full rounded-xl bg-[#d7dfcf] text-sm font-bold text-[#6c7b6c]"><MessageCircle aria-hidden="true" className="mr-2 h-4 w-4" />{text.lineMissing}</Button>}</article>;
           })}
         </div> : <div className="mt-10 rounded-[1.75rem] border border-dashed border-[#bdcfa8] bg-[#fbfdf2] px-6 py-16 text-center"><PackageCheck aria-hidden="true" className="mx-auto h-10 w-10 text-[#608a4a]" /><h3 className="mt-4 text-xl font-black text-[#244333]">{text.emptyTitle}</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#647467]">{text.emptyDescription}</p></div>}

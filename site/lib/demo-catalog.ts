@@ -6,6 +6,8 @@ export const demoCatalog: Catalog = {
     farmNameEn: "KENDO FARM",
     lineOfficialId: "kendozaza14271",
     lineAccountType: "personal",
+    lineMessageTh: "สวัสดีค่ะ/ครับ สนใจผัก {name} ของ KENDO FARM ค่ะ/ครับ",
+    lineMessageEn: "Hello! I am interested in {name} from KENDO FARM.",
     updatedAt: "2026-10-09T08:30:00.000Z",
   },
   vegetables: [

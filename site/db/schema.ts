@@ -27,5 +27,7 @@ export const farmSettings = sqliteTable("farm_settings", {
   farmNameEn: text("farm_name_en").notNull(),
   lineOfficialId: text("line_official_id").notNull(),
   lineAccountType: text("line_account_type").notNull().default("personal"),
+  lineMessageTh: text("line_message_th").notNull().default("สวัสดีค่ะ/ครับ สนใจผัก {name} ของ KENDO FARM ค่ะ/ครับ"),
+  lineMessageEn: text("line_message_en").notNull().default("Hello! I am interested in {name} from KENDO FARM."),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });

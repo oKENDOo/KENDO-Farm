@@ -20,8 +20,13 @@ type SettingsRow = {
   farm_name_en: string;
   line_official_id: string;
   line_account_type: string;
+  line_message_th: string;
+  line_message_en: string;
   updated_at: string;
 };
+
+const DEFAULT_LINE_MESSAGE_TH = "สวัสดีค่ะ/ครับ สนใจผัก {name} ของ KENDO FARM ค่ะ/ครับ";
+const DEFAULT_LINE_MESSAGE_EN = "Hello! I am interested in {name} from KENDO FARM.";
 
 function defaultLineId() {
   return process.env.LINE_DEFAULT_ID?.trim() ?? "";
@@ -32,6 +37,8 @@ const DEFAULT_SETTINGS: FarmSettings = {
   farmNameEn: "KENDO FARM",
   lineOfficialId: defaultLineId(),
   lineAccountType: "personal",
+  lineMessageTh: DEFAULT_LINE_MESSAGE_TH,
+  lineMessageEn: DEFAULT_LINE_MESSAGE_EN,
   updatedAt: new Date().toISOString(),
 };
 
@@ -70,6 +77,8 @@ function toSettings(row: SettingsRow | null): FarmSettings {
     farmNameEn: row.farm_name_en,
     lineOfficialId: row.line_official_id.trim() || defaultLineId(),
     lineAccountType: (row.line_account_type === "official" ? "official" : "personal") as LineAccountType,
+    lineMessageTh: row.line_message_th?.trim() || DEFAULT_LINE_MESSAGE_TH,
+    lineMessageEn: row.line_message_en?.trim() || DEFAULT_LINE_MESSAGE_EN,
     updatedAt: row.updated_at,
   };
 }
@@ -78,7 +87,7 @@ export async function getCatalog(): Promise<Catalog> {
   const db = getD1();
   const [settingsResult, vegetablesResult] = await db.batch([
     db.prepare(
-      "SELECT farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at FROM farm_settings WHERE id = 1",
+      "SELECT farm_name_th, farm_name_en, line_official_id, line_account_type, line_message_th, line_message_en, updated_at FROM farm_settings WHERE id = 1",
     ),
     db
       .prepare(
@@ -97,7 +106,7 @@ export async function getAdminCatalog(): Promise<Catalog> {
   const db = getD1();
   const [settingsResult, vegetablesResult] = await db.batch([
     db.prepare(
-      "SELECT farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at FROM farm_settings WHERE id = 1",
+      "SELECT farm_name_th, farm_name_en, line_official_id, line_account_type, line_message_th, line_message_en, updated_at FROM farm_settings WHERE id = 1",
     ),
     db.prepare(`SELECT ${vegetableColumns} FROM vegetables ORDER BY display_order ASC, name_th ASC`),
   ]);
@@ -171,16 +180,18 @@ export async function saveFarmSettings(input: Omit<FarmSettings, "updatedAt">) {
   const updatedAt = new Date().toISOString();
   await db
     .prepare(
-      `INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at)
-       VALUES (1, ?, ?, ?, ?, ?)
+      `INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, line_account_type, line_message_th, line_message_en, updated_at)
+       VALUES (1, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          farm_name_th = excluded.farm_name_th,
          farm_name_en = excluded.farm_name_en,
          line_official_id = excluded.line_official_id,
          line_account_type = excluded.line_account_type,
+         line_message_th = excluded.line_message_th,
+         line_message_en = excluded.line_message_en,
          updated_at = excluded.updated_at`,
     )
-    .bind(input.farmNameTh, input.farmNameEn, input.lineOfficialId, input.lineAccountType, updatedAt)
+    .bind(input.farmNameTh, input.farmNameEn, input.lineOfficialId, input.lineAccountType, input.lineMessageTh, input.lineMessageEn, updatedAt)
     .run();
 
   return { ...input, updatedAt };
@@ -199,8 +210,8 @@ export async function seedStarterCatalog() {
   );
   statements.push(
     db
-      .prepare(`INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, line_account_type, updated_at) VALUES (1, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING`)
-      .bind(demoCatalog.settings.farmNameTh, demoCatalog.settings.farmNameEn, demoCatalog.settings.lineOfficialId || defaultLineId(), demoCatalog.settings.lineAccountType, now),
+      .prepare(`INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, line_account_type, line_message_th, line_message_en, updated_at) VALUES (1, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING`)
+      .bind(demoCatalog.settings.farmNameTh, demoCatalog.settings.farmNameEn, demoCatalog.settings.lineOfficialId || defaultLineId(), demoCatalog.settings.lineAccountType, demoCatalog.settings.lineMessageTh, demoCatalog.settings.lineMessageEn, now),
   );
   await db.batch(statements);
   return getAdminCatalog();

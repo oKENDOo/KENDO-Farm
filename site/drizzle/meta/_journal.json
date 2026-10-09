@@ -29,6 +29,13 @@
       "when": 1791545600000,
       "tag": "0003_add_vegetable_image_url",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1791550600000,
+      "tag": "0004_add_line_message_templates",
+      "breakpoints": true
     }
   ]
 }

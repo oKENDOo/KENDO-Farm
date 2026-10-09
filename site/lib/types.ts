@@ -19,6 +19,8 @@ export type FarmSettings = {
   farmNameEn: string;
   lineOfficialId: string;
   lineAccountType: LineAccountType;
+  lineMessageTh: string;
+  lineMessageEn: string;
   updatedAt: string;
 };
 
