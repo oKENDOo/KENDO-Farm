@@ -1,4 +1,5 @@
 import { getD1 } from "@/db";
+import { demoCatalog } from "@/lib/demo-catalog";
 import type { Catalog, FarmSettings, Vegetable } from "@/lib/types";
 
 type VegetableRow = {
@@ -164,4 +165,24 @@ export async function saveFarmSettings(input: Omit<FarmSettings, "updatedAt">) {
     .run();
 
   return { ...input, updatedAt };
+}
+
+export async function seedStarterCatalog() {
+  const db = getD1();
+  const current = await db.prepare("SELECT COUNT(*) AS count FROM vegetables").first<{ count: number }>();
+  if ((current?.count ?? 0) > 0) return getAdminCatalog();
+
+  const now = new Date().toISOString();
+  const statements = demoCatalog.vegetables.map((item) =>
+    db
+      .prepare(`INSERT INTO vegetables (${vegetableColumns}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .bind(item.id, item.nameTh, item.nameEn, item.descriptionTh, item.descriptionEn, item.priceBaht, item.stockBags, item.displayOrder, now),
+  );
+  statements.push(
+    db
+      .prepare(`INSERT INTO farm_settings (id, farm_name_th, farm_name_en, line_official_id, updated_at) VALUES (1, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING`)
+      .bind(demoCatalog.settings.farmNameTh, demoCatalog.settings.farmNameEn, "", now),
+  );
+  await db.batch(statements);
+  return getAdminCatalog();
 }
