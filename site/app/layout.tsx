@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Starter Project",
-  description: "A clean starting point for building your site.",
+  title: "KENDO FARM | Hydroponic harvests today",
+  description: "Fresh hydroponic vegetables from KENDO FARM.",
   other: {
     "codex-preview": "development",
   },
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="th">
       <body className="antialiased">{children}</body>
     </html>
   );
