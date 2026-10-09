@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, ChevronDown, CircleDollarSign, Languages, Leaf, MapPin, MessageCircle, PackageCheck, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,10 +20,10 @@ type ModelContext = {
 
 const copy = {
   th: {
-    mission: "ภารกิจวันนี้", heroTitle: "ผักสดที่พร้อม\nออกผจญภัยกับคุณ", heroDescription: "ผักไฮโดรโปนิกส์เก็บสดจากสวน KENDO FARM ในเช้าวันนี้ เลือกคู่หูสีเขียวของคุณ แล้วทักเราใน LINE ได้เลย", explore: "สำรวจผักวันนี้", trustOne: "ปลูกแบบไฮโดรโปนิกส์", trustTwo: "เก็บสดทุกเช้า", trustThree: "ราคาโปร่งใส", storyEyebrow: "เรื่องราวจากสวน", storyTitle: "ปลูกจริง เก็บจริง ส่งต่อความสด", storyDescription: "ภาพจากโรงเรือน KENDO FARM ในทุกช่วงของการดูแลผัก", today: "เสบียงวันนี้", todayTitle: "เลือกคู่หูสีเขียวของคุณ", todayDescription: "ทุกถุงคัดสดจากสวนและพร้อมให้คุณพากลับบ้าน", updated: "อัปเดตล่าสุด", bagsLeft: "เหลือ", bags: "ถุง", bahtPerBag: "บาท / ถุง", ready: "พร้อมเก็บเกี่ยว", chatPersonal: "เปิดโปรไฟล์ LINE", chatOfficial: "ทัก LINE เรื่องผักนี้", lineMissing: "กำลังตั้งค่า LINE", emptyTitle: "สวนกำลังเตรียมรอบใหม่", emptyDescription: "วันนี้ยังไม่มีผักพร้อมขาย ลองกลับมาใหม่เร็ว ๆ นี้นะ", demo: "นี่คือรายการตัวอย่าง — เข้าหลังบ้านเพื่อใส่ผักจริง", footer: "ปลูกด้วยความใส่ใจ ส่งต่อความสดถึงคุณ", farm: "สวนผักไฮโดรโปนิกส์", contactMessage: (name: string) => `สวัสดีค่ะ/ครับ สนใจผัก ${name} ของ KENDO FARM ค่ะ/ครับ`,
+    mission: "ภารกิจวันนี้", heroTitle: "ผักสดที่พร้อม\nออกผจญภัยกับคุณ", heroDescription: "ผักไฮโดรโปนิกส์เก็บสดจากสวน KENDO FARM ในเช้าวันนี้ เลือกคู่หูสีเขียวของคุณ แล้วทักเราใน LINE ได้เลย", explore: "สำรวจผักวันนี้", trustOne: "ปลูกแบบไฮโดรโปนิกส์", trustTwo: "เก็บสดทุกเช้า", trustThree: "ราคาโปร่งใส", storyEyebrow: "เรื่องราวจากสวน", storyTitle: "ปลูกจริง เก็บจริง ส่งต่อความสด", storyDescription: "ภาพจากโรงเรือน KENDO FARM ในทุกช่วงของการดูแลผัก", today: "เสบียงวันนี้", todayTitle: "เลือกคู่หูสีเขียวของคุณ", todayDescription: "ทุกถุงคัดสดจากสวนและพร้อมให้คุณพากลับบ้าน", updated: "อัปเดตล่าสุด", bagsLeft: "เหลือ", bags: "ถุง", bahtPerBag: "บาท / ถุง", ready: "พร้อมจัดส่ง", chatPersonal: "เปิดโปรไฟล์ LINE", chatOfficial: "ทัก LINE เรื่องผักนี้", lineMissing: "กำลังตั้งค่า LINE", emptyTitle: "สวนกำลังเตรียมรอบใหม่", emptyDescription: "วันนี้ยังไม่มีผักพร้อมขาย ลองกลับมาใหม่เร็ว ๆ นี้นะ", demo: "นี่คือรายการตัวอย่าง — เข้าหลังบ้านเพื่อใส่ผักจริง", footer: "ปลูกด้วยความใส่ใจ ส่งต่อความสดถึงคุณ", farm: "สวนผักไฮโดรโปนิกส์", contactMessage: (name: string) => `สวัสดีค่ะ/ครับ สนใจผัก ${name} ของ KENDO FARM ค่ะ/ครับ`,
   },
   en: {
-    mission: "TODAY'S QUEST", heroTitle: "Fresh greens, ready\nfor your next adventure.", heroDescription: "Hydroponic vegetables harvested at KENDO FARM this morning. Pick your green companion, then say hello on LINE.", explore: "Explore today's harvest", trustOne: "Hydroponically grown", trustTwo: "Harvested each morning", trustThree: "Clear, fair prices", storyEyebrow: "FROM OUR FARM", storyTitle: "Grown here. Harvested here. Shared fresh.", storyDescription: "Real moments from the KENDO FARM greenhouse.", today: "TODAY'S SUPPLY", todayTitle: "Choose your green companion", todayDescription: "Every bag is freshly picked and ready to travel home with you.", updated: "Last updated", bagsLeft: "Only", bags: "bags left", bahtPerBag: "THB / bag", ready: "READY TO HARVEST", chatPersonal: "Open LINE profile", chatOfficial: "Ask about this on LINE", lineMissing: "LINE is being set up", emptyTitle: "The garden is preparing a new round", emptyDescription: "There are no vegetables ready today. Please check back soon.", demo: "Sample inventory — visit the dashboard to add your live vegetables.", footer: "Grown with care, shared fresh with you.", farm: "HYDROPONIC GARDEN", contactMessage: (name: string) => `Hello! I'm interested in ${name} from KENDO FARM.`,
+    mission: "TODAY'S QUEST", heroTitle: "Fresh greens, ready\nfor your next adventure.", heroDescription: "Hydroponic vegetables harvested at KENDO FARM this morning. Pick your green companion, then say hello on LINE.", explore: "Explore today's harvest", trustOne: "Hydroponically grown", trustTwo: "Harvested each morning", trustThree: "Clear, fair prices", storyEyebrow: "FROM OUR FARM", storyTitle: "Grown here. Harvested here. Shared fresh.", storyDescription: "Real moments from the KENDO FARM greenhouse.", today: "TODAY'S SUPPLY", todayTitle: "Choose your green companion", todayDescription: "Every bag is freshly picked and ready to travel home with you.", updated: "Last updated", bagsLeft: "Only", bags: "bags left", bahtPerBag: "THB / bag", ready: "READY TO SHIP", chatPersonal: "Open LINE profile", chatOfficial: "Ask about this on LINE", lineMissing: "LINE is being set up", emptyTitle: "The garden is preparing a new round", emptyDescription: "There are no vegetables ready today. Please check back soon.", demo: "Sample inventory — visit the dashboard to add your live vegetables.", footer: "Grown with care, shared fresh with you.", farm: "HYDROPONIC GARDEN", contactMessage: (name: string) => `Hello! I'm interested in ${name} from KENDO FARM.`,
   },
 } as const;
 
@@ -34,6 +33,14 @@ const farmPhotos = [
   { src: "/farm/mother-in-garden.png", alt: "A family member caring for fresh lettuce", className: "" },
   { src: "/farm/father-seeding.png", alt: "A family member tending young seedlings", className: "" },
   { src: "/farm/greenhouse-harvest.png", alt: "Wide view of the hydroponic greenhouse", className: "sm:col-span-2" },
+] as const;
+
+const heroPhotos = [
+  { src: "/farm/harvest-basket.png", alt: "Freshly harvested lettuce basket", className: "col-span-2 row-span-2" },
+  { src: "/farm/hydroponic-rows.png", alt: "Hydroponic lettuce rows", className: "" },
+  { src: "/farm/mother-in-garden.png", alt: "Family member in the lettuce garden", className: "" },
+  { src: "/farm/father-seeding.png", alt: "Family member tending seedlings", className: "" },
+  { src: "/farm/greenhouse-harvest.png", alt: "Wide hydroponic greenhouse view", className: "col-span-2 sm:col-span-3" },
 ] as const;
 
 function textFor(vegetable: Vegetable, locale: Locale) {
@@ -104,8 +111,9 @@ export function Storefront({ catalog, isDemo }: StorefrontProps) {
       </header>
 
       <section id="top" className="relative isolate min-h-[760px] overflow-hidden bg-[#133c2e] sm:min-h-[720px]">
-        <Image src="/hydroponic-garden-hero.png" alt="Fresh hydroponic vegetables at KENDO FARM" fill priority className="object-cover object-[63%_center]" sizes="100vw" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,38,29,.94)_0%,rgba(8,38,29,.78)_33%,rgba(8,38,29,.2)_72%,rgba(8,38,29,.1)_100%)]" />
+        <div className="absolute inset-0 grid auto-rows-[150px] grid-cols-2 gap-1 opacity-95 sm:auto-rows-[240px] sm:grid-cols-5">{heroPhotos.map((photo) => <div key={photo.src} className={`relative overflow-hidden ${photo.className}`}><img src={photo.src} alt={photo.alt} className="h-full w-full object-cover saturate-[1.12]" /></div>)}</div>
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,35,26,.96)_0%,rgba(4,35,26,.83)_28%,rgba(4,35,26,.35)_60%,rgba(4,35,26,.18)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(246,242,232,.96)_0%,rgba(246,242,232,0)_18%)]" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#f6f2e8] to-transparent" />
         <div className="relative mx-auto flex min-h-[760px] w-full max-w-[1440px] items-center px-5 pb-16 pt-32 sm:min-h-[720px] sm:px-10 lg:px-14">
           <div className="max-w-xl text-white">
