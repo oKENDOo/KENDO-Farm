@@ -22,6 +22,7 @@ describe("KENDO FARM storefront", () => {
     cy.contains("Green Oak").should("be.visible");
     cy.contains("Open LINE profile").should("be.visible");
     cy.contains("ไทย").click();
+    cy.get("#top").scrollIntoView();
     cy.contains("ผักสดที่พร้อม").should("be.visible");
   });
 });
