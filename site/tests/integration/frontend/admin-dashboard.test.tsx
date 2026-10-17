@@ -89,4 +89,19 @@ describe("admin dashboard integration", () => {
     await waitFor(() => expect(screen.getByText("บันทึกข้อมูลสำเร็จ")).toBeInTheDocument());
     expect(screen.getByText("ผักทดลอง")).toBeInTheDocument();
   });
+
+  it("saves farm settings, then lets the admin sign out", async () => {
+    const user = userEvent.setup();
+    authenticated = true;
+    render(<AdminDashboard />);
+
+    await screen.findByRole("heading", { name: "สวัสดีทีมสวน" });
+    await user.clear(screen.getByLabelText("ชื่อฟาร์ม (ไทย)"));
+    await user.type(screen.getByLabelText("ชื่อฟาร์ม (ไทย)"), "KENDO FARM กรุงเทพ");
+    await user.click(screen.getByRole("button", { name: "บันทึก" }));
+
+    await waitFor(() => expect(screen.getByText("บันทึกข้อมูลสำเร็จ")).toBeInTheDocument());
+    await user.click(screen.getByRole("button", { name: "ออกจากระบบ" }));
+    await screen.findByRole("heading", { name: "เข้าสู่หลังบ้าน" });
+  });
 });
