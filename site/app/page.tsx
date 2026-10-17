@@ -1,4 +1,4 @@
-import { Storefront } from "@/components/storefront";
+import { Storefront } from "@frontend/features/storefront/storefront";
 import { getCatalog } from "@/db/repository";
 import { demoCatalog } from "@/lib/demo-catalog";
 

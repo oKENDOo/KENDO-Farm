@@ -3,13 +3,13 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { CheckCircle2, ImagePlus, Leaf, LoaderCircle, LogOut, Pencil, Plus, Save, Settings2, ShieldCheck, Sprout, Trash2, TriangleAlert, X } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Toaster } from "@/components/ui/sonner";
-import type { Catalog, FarmSettings, Locale, Vegetable } from "@/lib/types";
+import { Button } from "@frontend/components/ui/button";
+import { Input } from "@frontend/components/ui/input";
+import { Textarea } from "@frontend/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@frontend/components/ui/select";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@frontend/components/ui/alert-dialog";
+import { Toaster } from "@frontend/components/ui/sonner";
+import type { Catalog, FarmSettings, Locale, Vegetable } from "@shared/types";
 
 type Session = { id: string; email: string };
 type Draft = Omit<Vegetable, "id" | "updatedAt">;

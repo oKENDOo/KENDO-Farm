@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, ChevronDown, CircleDollarSign, ExternalLink, Languages, Leaf, MapPin, MessageCircle, PackageCheck, Phone, ShieldCheck, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import type { Catalog, FarmSettings, Locale, Vegetable } from "@/lib/types";
+import { Button } from "@frontend/components/ui/button";
+import type { Catalog, FarmSettings, Locale, Vegetable } from "@shared/types";
 
 type StorefrontProps = { catalog: Catalog; isDemo: boolean };
 

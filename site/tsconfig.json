@@ -26,7 +26,12 @@
       "@/*": ["./*"],
       "@frontend/*": ["./frontend/*"],
       "@backend/*": ["./backend/*"],
-      "@shared/*": ["./shared/*"]
+      "@shared/*": ["./shared/*"],
+      "@/components": ["./frontend/components"],
+      "@/components/*": ["./frontend/components/*"],
+      "@/hooks": ["./frontend/hooks"],
+      "@/hooks/*": ["./frontend/hooks/*"],
+      "@/lib/utils": ["./frontend/lib/utils"]
     },
     "types": [
       "node",
