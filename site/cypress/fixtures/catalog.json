@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "farmNameTh": "KENDO FARM",
+    "farmNameEn": "KENDO FARM",
+    "lineOfficialId": "kendozaza14271",
+    "lineAccountType": "personal",
+    "lineMessageTh": "สวัสดีค่ะ/ครับ สนใจผัก {name} ของ KENDO FARM ค่ะ/ครับ",
+    "lineMessageEn": "Hello! I am interested in {name} from KENDO FARM.",
+    "updatedAt": "2026-10-17T09:00:00.000Z"
+  },
+  "vegetables": [
+    {
+      "id": "green-oak",
+      "nameTh": "กรีนโอ๊ค",
+      "nameEn": "Green Oak",
+      "descriptionTh": "กรอบนุ่ม เก็บสดจากรางปลูกเช้านี้",
+      "descriptionEn": "Tender, crisp lettuce harvested fresh this morning.",
+      "priceBaht": 45,
+      "stockBags": 12,
+      "displayOrder": 1,
+      "imageUrl": "/farm/harvest-basket.png",
+      "updatedAt": "2026-10-17T09:00:00.000Z"
+    }
+  ]
+}
