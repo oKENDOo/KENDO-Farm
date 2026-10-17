@@ -4,8 +4,8 @@ describe("KENDO FARM storefront", () => {
   });
 
   it("shows today's vegetables, price, stock, contact, and map details", () => {
-    cy.get("#harvest").scrollIntoView();
     cy.contains("KENDO FARM").should("be.visible");
+    cy.get("#harvest").scrollIntoView();
     cy.contains("กรีนโอ๊ค").should("be.visible");
     cy.contains("฿45").should("be.visible");
     cy.contains("เหลือ 12 ถุง").should("be.visible");
