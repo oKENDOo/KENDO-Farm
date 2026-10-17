@@ -56,4 +56,30 @@ npm run build
 npm run dev
 ```
 
+## Quality และการทดสอบ
+
+ชุดทดสอบอยู่ใน `site/` และแบ่งตามระดับเพื่อให้ตรวจสอบ Core Function ได้ชัดเจน:
+
+- Unit/Frontend: Vitest, React Testing Library และ MSW สำหรับ validation, API client, ภาษา, LINE link และ interaction ของหลังบ้าน
+- Integration/Backend: `@cloudflare/vitest-plugin` สำหรับรัน Worker runtime จริง พร้อม D1 migration, repository, catalog API และ auth boundary
+- E2E: Cypress สำหรับหน้าร้านและหลังบ้าน ตั้งแต่เปลี่ยนภาษา/เปิด LINE ไปจนถึง login, เพิ่มผัก และตั้งค่า LINE auto-message
+
+```bash
+cd site
+npm run lint
+npm run test:unit
+npm run test:integration
+npm run test:coverage
+npm run build
+```
+
+สำหรับ Cypress ให้เปิดเซิร์ฟเวอร์ local จากอีก terminal ก่อน แล้วตั้ง `CYPRESS_BASE_URL` หากใช้ URL อื่น:
+
+```bash
+npm run start
+npm run test:e2e
+```
+
+GitHub Actions จะรัน lint, coverage, unit, D1 integration, build และ Cypress ทุกครั้งที่ push หรือเปิด Pull Request ไปยัง `develop`/`main`
+
 ห้าม commit ค่า Supabase จริง, session cookie หรือรหัสผ่านลง Git
