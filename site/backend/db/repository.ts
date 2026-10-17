@@ -1,4 +1,4 @@
-import { getD1 } from "@/db";
+import { getD1 } from "@backend/db";
 import { demoCatalog } from "@/lib/demo-catalog";
 import type { Catalog, FarmSettings, LineAccountType, Vegetable } from "@/lib/types";
 
