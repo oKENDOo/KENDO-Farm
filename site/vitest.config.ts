@@ -7,10 +7,12 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   resolve: {
     alias: {
-      "@": root,
       "@frontend": path.join(root, "frontend"),
       "@backend": path.join(root, "backend"),
       "@shared": path.join(root, "shared"),
+      "@/lib/utils": path.join(root, "frontend/lib/utils"),
+      "@/components": path.join(root, "frontend/components"),
+      "@/hooks": path.join(root, "frontend/hooks"),
     },
   },
   test: {
