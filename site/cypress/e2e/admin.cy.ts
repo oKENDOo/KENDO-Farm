@@ -67,8 +67,8 @@ describe("KENDO FARM admin dashboard", () => {
     cy.get('button[role="combobox"]').click();
     cy.get('[role="option"]').contains("LINE Official Account").click();
     cy.contains("label", "LINE ID").find("input").first().clear().type("@kendo-farm");
-    cy.contains("label", "ข้อความอัตโนมัติ (ไทย)").find("textarea").first().clear().type("สนใจ {name} วันนี้ค่ะ");
-    cy.contains("label", "ข้อความอัตโนมัติ (English)").find("textarea").first().clear().type("I would like to order {name}.");
+    cy.contains("p", "ข้อความอัตโนมัติ (ไทย)").parent().find("textarea").first().clear().type("สนใจ {name} วันนี้ค่ะ");
+    cy.contains("p", "ข้อความอัตโนมัติ (English)").parent().find("textarea").first().clear().type("I would like to order {name}.");
     cy.contains("ตั้งค่าฟาร์ม").parents("aside").find("form button").contains("บันทึก").click();
     cy.wait("@saveSettings");
     cy.wait("@adminCatalog");
