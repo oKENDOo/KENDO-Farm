@@ -4,6 +4,7 @@ describe("KENDO FARM storefront", () => {
   });
 
   it("shows today's vegetables, price, stock, contact, and map details", () => {
+    cy.get("#harvest").scrollIntoView();
     cy.contains("KENDO FARM").should("be.visible");
     cy.contains("กรีนโอ๊ค").should("be.visible");
     cy.contains("฿45").should("be.visible");
@@ -14,6 +15,7 @@ describe("KENDO FARM storefront", () => {
   });
 
   it("switches between Thai and English and opens the personal LINE profile", () => {
+    cy.get("#harvest").scrollIntoView();
     cy.get('a[href*="line.me/R/ti/p/~kendozaza14271"]').first().should("be.visible");
     cy.contains("EN").click();
     cy.contains("TODAY'S SUPPLY").should("be.visible");
