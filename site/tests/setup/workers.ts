@@ -1,16 +1,10 @@
 import { beforeAll, beforeEach } from "vitest";
 import { env } from "cloudflare:workers";
 import { applyD1Migrations } from "cloudflare:test";
-import { readD1Migrations } from "@cloudflare/vitest-plugin";
-
-const migrations = await readD1Migrations({
-  projectPath: process.cwd(),
-  migrationsDir: "drizzle",
-});
 
 beforeAll(async () => {
   if (!env.DB) throw new Error("The test D1 binding DB is unavailable.");
-  await applyD1Migrations(env.DB, migrations);
+  await applyD1Migrations(env.DB, env.TEST_MIGRATIONS as unknown as Parameters<typeof applyD1Migrations>[1]);
 });
 
 beforeEach(async () => {

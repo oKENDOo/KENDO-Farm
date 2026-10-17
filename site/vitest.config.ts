@@ -21,6 +21,7 @@ export default defineConfig({
     setupFiles: ["./tests/setup/frontend.ts"],
     include: [
       "tests/unit/shared/**/*.test.{ts,tsx}",
+      "tests/unit/backend/auth.test.ts",
       "tests/unit/frontend/**/*.test.{ts,tsx}",
       "tests/integration/frontend/**/*.test.{ts,tsx}",
     ],
