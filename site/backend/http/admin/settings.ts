@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { saveFarmSettings } from "@backend/db/repository";
 import { AuthError, requireAdmin } from "@backend/auth";
-import { settingsInput } from "@/lib/validation";
+import { settingsInput } from "@shared/validation";
 
 export const dynamic = "force-dynamic";
 

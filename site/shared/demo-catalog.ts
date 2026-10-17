@@ -1,4 +1,4 @@
-import type { Catalog } from "@/lib/types";
+import type { Catalog } from "@shared/types";
 
 export const demoCatalog: Catalog = {
   settings: {

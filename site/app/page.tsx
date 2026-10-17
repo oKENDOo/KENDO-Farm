@@ -1,6 +1,6 @@
 import { Storefront } from "@frontend/features/storefront/storefront";
-import { getCatalog } from "@/db/repository";
-import { demoCatalog } from "@/lib/demo-catalog";
+import { getCatalog } from "@backend/db/repository";
+import { demoCatalog } from "@shared/demo-catalog";
 
 export const dynamic = "force-dynamic";
 

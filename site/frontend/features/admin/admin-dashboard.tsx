@@ -9,6 +9,7 @@ import { Textarea } from "@frontend/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@frontend/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@frontend/components/ui/alert-dialog";
 import { Toaster } from "@frontend/components/ui/sonner";
+import { api } from "@frontend/lib/api-client";
 import type { Catalog, FarmSettings, Locale, Vegetable } from "@shared/types";
 
 type Session = { id: string; email: string };
@@ -24,13 +25,6 @@ const copy = {
     eyebrow: "FARM TEAM", title: "Hello, garden team", subtitle: "Update vegetables, prices, and stock. The shop changes right away.", signIn: "Sign in to the dashboard", email: "Admin email", password: "Password", enter: "Sign in", reset: "Send password reset link", resetSent: "Send password reset link", setup: "The dashboard is not connected yet", setupDesc: "Add the Supabase values and approved farm emails to this site's secret environment settings.", inventory: "Vegetable inventory", inventoryDesc: "Items with zero bags are hidden from customers.", add: "Add vegetable", starter: "Add starter vegetables", settings: "Farm settings", save: "Save changes", cancel: "Cancel", edit: "Edit", delete: "Delete", deleteTitle: "Delete this vegetable?", deleteDesc: "It will disappear from both the dashboard and the public shop right away.", confirmDelete: "Delete vegetable", fieldNameTh: "Vegetable name (Thai)", fieldNameEn: "Vegetable name (English)", fieldDescTh: "Description (Thai)", fieldDescEn: "Description (English)", price: "Price (THB / bag)", stock: "Stock remaining (bags)", order: "Display order", image: "Vegetable photo", imagePick: "Choose a photo", imageRemove: "Remove photo", imageHelp: "The photo is resized and stored with this vegetable; no extra storage service is needed.", farmTh: "Farm name (Thai)", farmEn: "Farm name (English)", lineType: "LINE account type", linePersonal: "Personal LINE (open profile)", lineOfficial: "LINE Official Account (prefill message)", line: "LINE ID", lineHelp: "Personal LINE opens the profile; an Official Account can prefill the vegetable message.", lineMessageTh: "Auto message (Thai)", lineMessageEn: "Auto message (English)", lineMessageHelp: "Use {name} for the vegetable name. It will be replaced automatically when LINE opens.", signedIn: "Signed in", logout: "Sign out", live: "Visible in shop", hidden: "Hidden from shop", error: "Something went wrong", imageError: "This image could not be read", demo: "Your D1 database is empty", demoDesc: "Add four editable starter vegetables to begin.", formTitle: "Edit vegetable", newTitle: "Add a vegetable", saveVegetable: "Save vegetable", created: "Saved successfully", deleted: "Deleted successfully", seeded: "Starter vegetables added", bags: "bags",
   },
 } as const;
-
-async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) } });
-  const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body.error ?? "Request failed.");
-  return body as T;
-}
 
 function toDraft(vegetable: Vegetable): Draft {
   const { id: _id, updatedAt: _updatedAt, ...draft } = vegetable;

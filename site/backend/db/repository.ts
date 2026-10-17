@@ -1,6 +1,6 @@
 import { getD1 } from "@backend/db";
-import { demoCatalog } from "@/lib/demo-catalog";
-import type { Catalog, FarmSettings, LineAccountType, Vegetable } from "@/lib/types";
+import { demoCatalog } from "@shared/demo-catalog";
+import type { Catalog, FarmSettings, LineAccountType, Vegetable } from "@shared/types";
 
 type VegetableRow = {
   id: string;
