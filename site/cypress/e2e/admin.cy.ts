@@ -49,12 +49,12 @@ describe("KENDO FARM admin dashboard", () => {
   it("signs in, adds an inventory item, and shows a success toast", () => {
     signIn();
     cy.contains("เพิ่มผัก").click();
-    cy.contains("ชื่อผัก (ไทย)").parent().find("input").type("เรดคอรัล");
-    cy.contains("ชื่อผัก (English)").parent().find("input").type("Red Coral");
-    cy.contains("รายละเอียด (ไทย)").parent().find("textarea").type("ใบกรอบสีสวย");
-    cy.contains("Description (English)").parent().find("textarea").type("Crisp colourful leaves");
-    cy.contains("ราคา (บาท/ถุง)").parent().find("input").clear().type("65");
-    cy.contains("จำนวนคงเหลือ (ถุง)").parent().find("input").clear().type("5");
+    cy.contains("label", "ชื่อผัก (ไทย)").find("input").first().type("เรดคอรัล");
+    cy.contains("label", "ชื่อผัก (English)").find("input").first().type("Red Coral");
+    cy.contains("label", "รายละเอียด (ไทย)").find("textarea").first().type("ใบกรอบสีสวย");
+    cy.contains("label", "Description (English)").find("textarea").first().type("Crisp colourful leaves");
+    cy.contains("label", "ราคา (บาท/ถุง)").find("input").first().clear().type("65");
+    cy.contains("label", "จำนวนคงเหลือ (ถุง)").find("input").first().clear().type("5");
     cy.contains("บันทึกรายการผัก").click();
     cy.wait("@createVegetable");
     cy.wait("@adminCatalog");
@@ -66,9 +66,9 @@ describe("KENDO FARM admin dashboard", () => {
     signIn();
     cy.get('button[role="combobox"]').click();
     cy.get('[role="option"]').contains("LINE Official Account").click();
-    cy.contains("LINE ID").parent().find("input").clear().type("@kendo-farm");
-    cy.contains("ข้อความอัตโนมัติ (ไทย)").parent().find("textarea").clear().type("สนใจ {name} วันนี้ค่ะ");
-    cy.contains("ข้อความอัตโนมัติ (English)").parent().find("textarea").clear().type("I would like to order {name}.");
+    cy.contains("label", "LINE ID").find("input").first().clear().type("@kendo-farm");
+    cy.contains("label", "ข้อความอัตโนมัติ (ไทย)").find("textarea").first().clear().type("สนใจ {name} วันนี้ค่ะ");
+    cy.contains("label", "ข้อความอัตโนมัติ (English)").find("textarea").first().clear().type("I would like to order {name}.");
     cy.contains("ตั้งค่าฟาร์ม").parents("aside").find("form button").contains("บันทึก").click();
     cy.wait("@saveSettings");
     cy.wait("@adminCatalog");

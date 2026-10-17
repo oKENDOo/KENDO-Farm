@@ -18,6 +18,7 @@ describe("KENDO FARM storefront", () => {
     cy.get("#harvest").scrollIntoView();
     cy.get('a[href*="line.me/R/ti/p/~kendozaza14271"]').first().should("be.visible");
     cy.contains("EN").click();
+    cy.get("#harvest").scrollIntoView();
     cy.contains("TODAY'S SUPPLY").should("be.visible");
     cy.contains("Green Oak").should("be.visible");
     cy.contains("Open LINE profile").should("be.visible");
