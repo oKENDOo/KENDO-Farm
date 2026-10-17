@@ -1,6 +1,6 @@
 import { getAdminCatalog, getCatalog } from "@backend/db/repository";
 
-export default {
+const worker = {
   async fetch(request: Request) {
     const url = new URL(request.url);
     const path = url.pathname;
@@ -15,3 +15,5 @@ export default {
     return Response.json({ error: "Not found" }, { status: 404 });
   },
 };
+
+export default worker;

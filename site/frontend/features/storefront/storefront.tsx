@@ -60,14 +60,13 @@ function formatPrice(price: number, locale: Locale) {
 }
 
 export function Storefront({ catalog, isDemo }: StorefrontProps) {
-  const [locale, setLocale] = useState<Locale>("th");
+  const [locale, setLocale] = useState<Locale>(() => {
+    if (typeof window === "undefined") return "th";
+    const saved = window.localStorage.getItem("kendo-locale");
+    return saved === "th" || saved === "en" ? saved : "th";
+  });
   const text = copy[locale];
   const latest = useMemo(() => catalog.vegetables.reduce((value, item) => item.updatedAt > value ? item.updatedAt : value, catalog.settings.updatedAt), [catalog]);
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem("kendo-locale");
-    if (saved === "th" || saved === "en") setLocale(saved);
-  }, []);
 
   useEffect(() => {
     const context = (document as Document & { modelContext?: ModelContext }).modelContext;

@@ -1,7 +1,8 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { CheckCircle2, ImagePlus, Leaf, LoaderCircle, LogOut, Pencil, Plus, Save, Settings2, ShieldCheck, Sprout, Trash2, TriangleAlert, X } from "lucide-react";
+import Link from "next/link";
+import { ImagePlus, Leaf, LoaderCircle, LogOut, Pencil, Plus, Save, Settings2, ShieldCheck, Sprout, Trash2, TriangleAlert, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@frontend/components/ui/button";
 import { Input } from "@frontend/components/ui/input";
@@ -32,7 +33,11 @@ function toDraft(vegetable: Vegetable): Draft {
 }
 
 export function AdminDashboard() {
-  const [locale, setLocale] = useState<Locale>("th");
+  const [locale, setLocale] = useState<Locale>(() => {
+    if (typeof window === "undefined") return "th";
+    const saved = window.localStorage.getItem("kendo-locale");
+    return saved === "th" || saved === "en" ? saved : "th";
+  });
   const [session, setSession] = useState<Session | null>(null);
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [status, setStatus] = useState<"loading" | "signed-out" | "setup">("loading");
@@ -66,8 +71,6 @@ export function AdminDashboard() {
   }
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("kendo-locale");
-    if (saved === "th" || saved === "en") setLocale(saved);
     api<{ user: Session }>("/api/admin/session")
       .then(async ({ user }) => { setSession(user); await loadDashboard(); setStatus("signed-out"); })
       .catch((reason: Error) => { setStatus(reason.message.includes("configured") ? "setup" : "signed-out"); });
@@ -181,7 +184,7 @@ export function AdminDashboard() {
     <Toaster position="bottom-right" richColors closeButton />
     <div className="mx-auto max-w-6xl">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] bg-[#174e3a] px-5 py-4 text-white shadow-lg sm:px-7">
-        <a href="/" className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcf7ae] text-[#174e3a]"><Leaf className="h-5 w-5 fill-current" /></span><span><strong className="block tracking-[.15em]">KENDO FARM</strong><span className="text-xs text-white/70">{text.eyebrow}</span></span></a>
+        <Link href="/" className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcf7ae] text-[#174e3a]"><Leaf className="h-5 w-5 fill-current" /></span><span><strong className="block tracking-[.15em]">KENDO FARM</strong><span className="text-xs text-white/70">{text.eyebrow}</span></span></Link>
         <div className="flex items-center gap-3"><div className="rounded-xl bg-white/10 p-1"><button onClick={() => switchLocale("th")} className={`rounded-lg px-2.5 py-1.5 text-xs font-bold ${locale === "th" ? "bg-[#efffcb] text-[#173529]" : "text-white/75"}`}>ไทย</button><button onClick={() => switchLocale("en")} className={`rounded-lg px-2.5 py-1.5 text-xs font-bold ${locale === "en" ? "bg-[#efffcb] text-[#173529]" : "text-white/75"}`}>EN</button></div>{session && <Button variant="ghost" onClick={logout} className="text-white hover:bg-white/10 hover:text-white"><LogOut /> {text.logout}</Button>}</div>
       </header>
 
