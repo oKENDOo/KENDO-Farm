@@ -1,35 +1,44 @@
-# KENDO FARM
+# 🥬 KENDO FARM
 
-เว็บไซต์หน้าร้านและหลังบ้านสำหรับฟาร์มผักไฮโดรโปนิกส์ของครอบครัว
+เว็บไซต์หน้าร้านและหลังบ้านสำหรับฟาร์มผักไฮโดรโปนิกส์ของครอบครัว ให้ลูกค้าดูผักที่พร้อมจำหน่ายและติดต่อผ่าน LINE ได้สะดวก พร้อมพื้นที่สำหรับจัดการสินค้าและข้อมูลฟาร์ม
 
-## เปิดดูเว็บไซต์
+[🌿 ดูหน้าร้าน](https://kendo-farm.yamrollpoon.chatgpt.site) · [🔐 เข้าสู่หลังบ้าน](https://kendo-farm.yamrollpoon.chatgpt.site/admin)
 
-- หน้าร้าน: https://kendo-farm.yamrollpoon.chatgpt.site
-- หลังบ้าน: https://kendo-farm.yamrollpoon.chatgpt.site/admin
+---
 
+## สิ่งที่ทำได้
 
-## หน้าร้าน
+### 🌱 หน้าร้าน
 
-- ภาษาไทยและ English พร้อมจำภาษาที่เลือกไว้บนอุปกรณ์
-- แสดงผักที่มีสต็อกมากกว่า 0 ถุง พร้อมราคาและจำนวนคงเหลือ
-- การ์ดผักมีรูปภาพจริงจากฟาร์ม
-- ปุ่ม LINE พร้อมไอคอน
-- รองรับ LINE ส่วนตัวสำหรับเปิดโปรไฟล์ และ LINE Official Account สำหรับเติมข้อความผักในแชต
-- แกลเลอรีภาพบรรยากาศการปลูกจริงจากโรงเรือน
+- เลือกภาษาไทยหรือ English และจำภาษาที่เลือกไว้บนอุปกรณ์
+- แสดงผักที่มีสต็อกมากกว่า 0 ถุง พร้อมรูปจริง ราคา และจำนวนคงเหลือ
+- ติดต่อผ่าน LINE ส่วนตัวเพื่อเปิดโปรไฟล์ หรือ LINE Official Account เพื่อเติมข้อความผักในแชต
+- ชมภาพบรรยากาศการปลูกจริงจากโรงเรือน
 
-## หลังบ้าน
+### 🧺 หลังบ้าน
 
-เข้า `/admin` ด้วยบัญชี Supabase Auth ที่อยู่ใน `ADMIN_EMAILS` แล้วสามารถ:
+เข้า `/admin` ด้วยบัญชี Supabase Auth ที่มีอีเมลอยู่ใน `ADMIN_EMAILS` เพื่อ:
 
-- เพิ่ม แก้ไข และลบรายการผัก
-- ปรับราคา จำนวนคงเหลือ และลำดับแสดงผล
-- อัปโหลดรูปผักจากเครื่อง รูปจะถูกย่อก่อนบันทึกเพื่อคุมขนาดข้อมูล
-- เลือกประเภท LINE และเปลี่ยน LINE ID ของพ่อหรือแม่ได้เอง
+- เพิ่ม แก้ไข และลบผัก รวมถึงปรับราคา สต็อก และลำดับการแสดงผล
+- อัปโหลดรูปผักจากเครื่อง โดยระบบย่อรูปก่อนบันทึกเพื่อควบคุมขนาดข้อมูล
+- เลือกประเภทบัญชี LINE และเปลี่ยน LINE ID ของพ่อหรือแม่
 - เปลี่ยนชื่อฟาร์มทั้งภาษาไทยและ English
 
-## การตั้งค่า Supabase
+## 🚀 เริ่มพัฒนาในเครื่อง
 
-ตั้งค่าผ่าน Runtime Environment ของ Site ห้ามใส่ค่าจริงลง Git:
+ต้องมี **Node.js 22.13.0 ขึ้นไป** และ npm จากนั้นเปิด terminal ที่โฟลเดอร์หลักของโปรเจกต์:
+
+```bash
+cd site
+npm install
+npm run dev
+```
+
+สำหรับการสร้าง production build ใช้ `npm run build` หากต้องการทดลองรัน build ในเครื่อง ให้รัน `npm run start` หลัง build สำเร็จ
+
+## 🔑 ตั้งค่า Supabase และ LINE
+
+ตั้งค่าตัวแปรต่อไปนี้ผ่าน Runtime Environment ของ Site โดยแทนค่าตัวอย่างด้วยค่าของโปรเจกต์:
 
 ```text
 SUPABASE_URL=https://YOUR-PROJECT.supabase.co
@@ -38,48 +47,59 @@ ADMIN_EMAILS=father@example.com,mother@example.com
 LINE_DEFAULT_ID=your-line-id
 ```
 
-ใน Supabase ให้เปิด Email provider และสร้างผู้ดูแลที่ `Authentication > Users` ก่อนเข้า `/admin`
+เปิด Email provider ใน Supabase และสร้างบัญชีผู้ดูแลที่ **Authentication > Users** ก่อนเข้า `/admin` โดยอีเมลต้องตรงกับรายการใน `ADMIN_EMAILS` ซึ่งคั่นแต่ละอีเมลด้วยเครื่องหมายจุลภาค
 
-## โครงสร้างข้อมูลและรูปภาพ
+> อย่า commit ค่า Supabase จริง, session cookie หรือรหัสผ่านลง Git
 
-- Cloudflare D1 เก็บผัก ราคา สต็อก การตั้งค่า และรูปที่อัปโหลดแบบย่อ
-- รูปตกแต่งของฟาร์มอยู่ใน `site/public/farm/`
-- Migration อยู่ใน `site/drizzle/` และถูกนำไปใช้ตอนเผยแพร่
-- ข้อมูลผักที่มี `stock_bags = 0` จะไม่แสดงในหน้าร้าน
+## 🗂️ โครงสร้างโปรเจกต์
 
-## พัฒนาในเครื่อง
+```text
+KENDO-Farm/
+├── README.md             คู่มือหลักของโปรเจกต์
+├── .github/workflows/    GitHub Actions
+└── site/
+    ├── app/              ตัวเชื่อม route ของ Vinext
+    ├── frontend/         หน้าเว็บ, components, hooks, styles และ API client
+    ├── backend/          API, authentication, D1 และ connector ฝั่งเซิร์ฟเวอร์
+    ├── shared/           ชนิดข้อมูล, validation และข้อมูลตัวอย่างที่ใช้ร่วมกัน
+    ├── drizzle/          Database migrations
+    ├── public/farm/      รูปตกแต่งของฟาร์ม
+    ├── tests/            Unit และ integration tests
+    └── cypress/          End-to-end tests
+```
+
+Frontend และ backend แยกตามหน้าที่ภายในโปรเจกต์ แต่เผยแพร่ร่วมกันเป็น Vinext/Cloudflare Worker เดียวกัน ส่วน `shared/` ใช้สำหรับโค้ดที่ปลอดภัยทั้งใน browser และ Worker จึงไม่ควรใส่ Cloudflare bindings, secrets หรือโมดูลเฉพาะเซิร์ฟเวอร์ไว้ที่นี่ ดูรายละเอียดเพิ่มเติมได้ที่ [site/ARCHITECTURE.md](site/ARCHITECTURE.md)
+
+Cloudflare D1 เก็บข้อมูลผัก ราคา สต็อก การตั้งค่า และรูปที่อัปโหลดแบบย่อ โดย migrations อยู่ใน `site/drizzle/` และถูกนำไปใช้ตอนเผยแพร่ ผักที่มี `stock_bags = 0` จะไม่แสดงในหน้าร้าน
+
+## 🧪 ตรวจสอบและทดสอบ
+
+รันคำสั่งต่อไปนี้จากโฟลเดอร์ `site/`:
+
+| คำสั่ง | สิ่งที่ตรวจสอบ |
+| --- | --- |
+| `npm run lint` | รูปแบบและข้อผิดพลาดของโค้ดด้วย ESLint |
+| `npm run check:architecture` | ขอบเขตการแบ่งโค้ดในโปรเจกต์ |
+| `npm run test:unit` | Unit และ frontend tests ด้วย Vitest, React Testing Library และ MSW |
+| `npm run test:integration` | Backend integration ใน Worker runtime รวมถึง D1, repository, catalog API และ auth |
+| `npm run test:coverage` | ชุดทดสอบพร้อมรายงาน coverage |
+| `npm run build` | สร้าง production build |
+
+สำหรับ **Cypress E2E** ให้ build และเปิดเซิร์ฟเวอร์ใน terminal หนึ่งก่อน:
 
 ```bash
 cd site
-npm install
 npm run build
-npm run dev
-```
-
-## Quality และการทดสอบ
-
-ชุดทดสอบอยู่ใน `site/` และแบ่งตามระดับเพื่อให้ตรวจสอบ Core Function ได้ชัดเจน:
-
-- Unit/Frontend: Vitest, React Testing Library และ MSW สำหรับ validation, API client, ภาษา, LINE link และ interaction ของหลังบ้าน
-- Integration/Backend: `@cloudflare/vitest-plugin` สำหรับรัน Worker runtime จริง พร้อม D1 migration, repository, catalog API และ auth boundary
-- E2E: Cypress สำหรับหน้าร้านและหลังบ้าน ตั้งแต่เปลี่ยนภาษา/เปิด LINE ไปจนถึง login, เพิ่มผัก และตั้งค่า LINE auto-message
-
-```bash
-cd site
-npm run lint
-npm run test:unit
-npm run test:integration
-npm run test:coverage
-npm run build
-```
-
-สำหรับ Cypress ให้เปิดเซิร์ฟเวอร์ local จากอีก terminal ก่อน แล้วตั้ง `CYPRESS_BASE_URL` หากใช้ URL อื่น:
-
-```bash
 npm run start
+```
+
+จากนั้นเปิดอีก terminal แล้วรัน:
+
+```bash
+cd site
 npm run test:e2e
 ```
 
-GitHub Actions จะรัน lint, coverage, unit, D1 integration, build และ Cypress ทุกครั้งที่ push หรือเปิด Pull Request ไปยัง `develop`/`main`
+Cypress ใช้ `http://127.0.0.1:8787` เป็นค่าเริ่มต้น หากเซิร์ฟเวอร์อยู่ที่ URL อื่นให้ตั้ง `CYPRESS_BASE_URL` ก่อนรันทดสอบ ชุดทดสอบครอบคลุมทั้งหน้าร้านและหลังบ้าน เช่น การเปลี่ยนภาษา การเปิด LINE การเข้าสู่ระบบ และการจัดการผัก
 
-ห้าม commit ค่า Supabase จริง, session cookie หรือรหัสผ่านลง Git
+GitHub Actions รัน lint, unit tests, coverage, integration tests, build และ Cypress เมื่อ push หรือเปิด Pull Request ไปยัง `develop` หรือ `main`
