@@ -84,7 +84,9 @@ export function AdminDashboard() {
   }
 
   async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    input.value = "";
     if (!file || !draft) return;
     if (!file.type.startsWith("image/")) {
       showError(new Error(text.imageError));
@@ -109,7 +111,6 @@ export function AdminDashboard() {
     } catch {
       showError(new Error(text.imageError));
     } finally {
-      event.target.value = "";
       setBusy(false);
     }
   }
@@ -192,6 +193,6 @@ export function AdminDashboard() {
         {draft && <section className="rounded-[1.5rem] border border-[#dce5c4] bg-[#fffef8] p-5 shadow-sm sm:p-6"><div className="flex items-center justify-between gap-4"><div><p className="text-xs font-black tracking-[.15em] text-[#5e8b46]">{editingId ? text.formTitle.toUpperCase() : text.newTitle.toUpperCase()}</p><h2 className="mt-2 text-2xl font-black">{editingId ? text.formTitle : text.newTitle}</h2></div><Button variant="ghost" onClick={() => { setDraft(null); setEditingId(null); }}>{text.cancel}</Button></div><form onSubmit={saveVegetable} className="mt-6 grid gap-5 md:grid-cols-2">{field("nameTh", text.fieldNameTh)}{field("nameEn", text.fieldNameEn)}{field("descriptionTh", text.fieldDescTh, "textarea")}{field("descriptionEn", text.fieldDescEn, "textarea")}{field("priceBaht", text.price, "input", "number")}{field("stockBags", text.stock, "input", "number")}{field("displayOrder", text.order, "input", "number")}<div className="flex items-end"><Button disabled={busy} className="h-10 w-full rounded-xl bg-[#174e3a] font-bold"><Save /> {text.saveVegetable}</Button></div></form></section>}
       </div>}
     </div>
-    {cropSource && <ImageCropDialog source={cropSource} locale={locale} onCancel={() => setCropSource(null)} onError={() => { setCropSource(null); showError(new Error(text.imageError)); }} onConfirm={(imageUrl) => { setDraft((current) => current ? { ...current, imageUrl } : current); setCropSource(null); }} />}
+    {cropSource && draft && <ImageCropDialog source={cropSource} locale={locale} card={draft} onCancel={() => setCropSource(null)} onError={() => { setCropSource(null); showError(new Error(text.imageError)); }} onConfirm={(imageUrl) => { setDraft((current) => current ? { ...current, imageUrl } : current); setCropSource(null); }} />}
   </main>;
 }

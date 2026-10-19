@@ -105,3 +105,31 @@ describe("admin dashboard integration", () => {
     await screen.findByRole("heading", { name: "เข้าสู่หลังบ้าน" });
   });
 });
+
+it("opens the crop editor after upload, preserves the existing photo on cancel, and accepts the same file again", async () => {
+  authenticated = true;
+  const user = userEvent.setup();
+  const OriginalImage = window.Image;
+  class LoadableImage {
+    onload: (() => void) | null = null;
+    onerror: (() => void) | null = null;
+    set src(_value: string) { queueMicrotask(() => this.onload?.()); }
+  }
+  window.Image = LoadableImage as unknown as typeof Image;
+  try {
+    render(<AdminDashboard />);
+    await screen.findByRole("heading", { name: "สวัสดีทีมสวน" });
+    await user.click(screen.getAllByRole("button", { name: "แก้ไข" })[0]);
+    const original = screen.getByRole("img", { name: "รูปผัก" }).getAttribute("src");
+    const input = screen.getByLabelText("เลือกรูปจากเครื่อง");
+    const file = new File(["image"], "photo.jpg", { type: "image/jpeg" });
+    await user.upload(input, file);
+    await screen.findByRole("dialog", { name: "ปรับรูปผัก" });
+    await user.click(screen.getByRole("button", { name: "ยกเลิก" }));
+    expect(screen.getByRole("img", { name: "รูปผัก" })).toHaveAttribute("src", original);
+    await user.upload(input, file);
+    await screen.findByRole("dialog", { name: "ปรับรูปผัก" });
+  } finally {
+    window.Image = OriginalImage;
+  }
+});
