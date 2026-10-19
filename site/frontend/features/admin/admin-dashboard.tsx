@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@frontend/components/ui/alert-dialog";
 import { Toaster } from "@frontend/components/ui/sonner";
 import { api } from "@frontend/lib/api-client";
+import { ImageCropDialog } from "./image-crop-dialog";
 import type { Catalog, FarmSettings, Locale, Vegetable } from "@shared/types";
 
 type Session = { id: string; email: string };
@@ -46,6 +47,7 @@ export function AdminDashboard() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [cropSource, setCropSource] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [settings, setSettings] = useState<Omit<FarmSettings, "updatedAt"> | null>(null);
   const [busy, setBusy] = useState(false);
@@ -97,24 +99,15 @@ export function AdminDashboard() {
         reader.onerror = () => reject(new Error("Unable to read the image."));
         reader.readAsDataURL(file);
       });
-      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const preview = new window.Image();
-        preview.onload = () => resolve(preview);
-        preview.onerror = () => reject(new Error("Unable to open the image."));
-        preview.src = source;
+      await new Promise<void>((resolve, reject) => {
+        const image = new window.Image();
+        image.onload = () => resolve();
+        image.onerror = () => reject(new Error(text.imageError));
+        image.src = source;
       });
-      const maxEdge = 1200;
-      const scale = Math.min(1, maxEdge / Math.max(image.naturalWidth, image.naturalHeight));
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-      const context = canvas.getContext("2d");
-      if (!context) throw new Error("Unable to prepare the image.");
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-      const compressed = canvas.toDataURL("image/jpeg", 0.82);
-      setDraft((current) => current ? { ...current, imageUrl: compressed } : current);
-    } catch (reason) {
-      showError(reason);
+      setCropSource(source);
+    } catch {
+      showError(new Error(text.imageError));
     } finally {
       event.target.value = "";
       setBusy(false);
@@ -177,7 +170,7 @@ export function AdminDashboard() {
     const props = { value: String(draft?.[key] ?? ""), onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDraft((current) => current ? { ...current, [key]: type === "number" ? Number(event.target.value) : event.target.value } : current), required: true };
     const inputField = <label className="block text-sm font-bold text-[#315546]"><span className="mb-2 block">{label}</span>{kind === "textarea" ? <Textarea {...props} /> : <Input {...props} type={type} min={type === "number" ? 0 : undefined} />}</label>;
     if (key !== "displayOrder") return inputField;
-    return <><>{inputField}</><div className="space-y-2 rounded-2xl border border-dashed border-[#cbd8b5] bg-[#f6faea] p-4 md:col-span-2"><div className="flex items-center gap-2 text-sm font-bold text-[#315546]"><ImagePlus className="h-4 w-4" />{text.image}</div>{draft?.imageUrl ? <div className="relative overflow-hidden rounded-xl border border-[#dce5c4] bg-white"><img src={draft.imageUrl} alt={text.image} className="h-44 w-full object-cover" /><Button type="button" variant="outline" size="sm" onClick={() => setDraft((current) => current ? { ...current, imageUrl: null } : current)} className="absolute right-3 top-3 bg-white/90"><X /> {text.imageRemove}</Button></div> : <div className="grid h-36 place-items-center rounded-xl border border-[#e0e8d1] bg-white text-center text-sm text-[#637568]"><div><ImagePlus className="mx-auto mb-2 h-7 w-7 text-[#70945a]" /><p>{text.imagePick}</p></div></div>}<Input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void handleImageChange(event)} disabled={busy} /><p className="text-xs leading-5 text-[#637568]">{text.imageHelp}</p></div></>;
+    return <><>{inputField}</><div className="space-y-2 rounded-2xl border border-dashed border-[#cbd8b5] bg-[#f6faea] p-4 md:col-span-2"><div className="flex items-center gap-2 text-sm font-bold text-[#315546]"><ImagePlus className="h-4 w-4" />{text.image}</div>{draft?.imageUrl ? <div className="relative overflow-hidden rounded-xl border border-[#dce5c4] bg-white"><img src={draft.imageUrl} alt={text.image} className="h-44 w-full object-cover" /><Button type="button" variant="outline" size="sm" onClick={() => setDraft((current) => current ? { ...current, imageUrl: null } : current)} className="absolute right-3 top-3 bg-white/90"><X /> {text.imageRemove}</Button></div> : <div className="grid h-36 place-items-center rounded-xl border border-[#e0e8d1] bg-white text-center text-sm text-[#637568]"><div><ImagePlus className="mx-auto mb-2 h-7 w-7 text-[#70945a]" /><p>{text.imagePick}</p></div></div>}<Input aria-label={text.imagePick} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void handleImageChange(event)} disabled={busy} /><p className="text-xs leading-5 text-[#637568]">{text.imageHelp}</p></div></>;
   };
 
   return <main className="min-h-screen bg-[#f6f2e8] px-4 py-5 text-[#173529] sm:px-8 sm:py-8">
@@ -199,5 +192,6 @@ export function AdminDashboard() {
         {draft && <section className="rounded-[1.5rem] border border-[#dce5c4] bg-[#fffef8] p-5 shadow-sm sm:p-6"><div className="flex items-center justify-between gap-4"><div><p className="text-xs font-black tracking-[.15em] text-[#5e8b46]">{editingId ? text.formTitle.toUpperCase() : text.newTitle.toUpperCase()}</p><h2 className="mt-2 text-2xl font-black">{editingId ? text.formTitle : text.newTitle}</h2></div><Button variant="ghost" onClick={() => { setDraft(null); setEditingId(null); }}>{text.cancel}</Button></div><form onSubmit={saveVegetable} className="mt-6 grid gap-5 md:grid-cols-2">{field("nameTh", text.fieldNameTh)}{field("nameEn", text.fieldNameEn)}{field("descriptionTh", text.fieldDescTh, "textarea")}{field("descriptionEn", text.fieldDescEn, "textarea")}{field("priceBaht", text.price, "input", "number")}{field("stockBags", text.stock, "input", "number")}{field("displayOrder", text.order, "input", "number")}<div className="flex items-end"><Button disabled={busy} className="h-10 w-full rounded-xl bg-[#174e3a] font-bold"><Save /> {text.saveVegetable}</Button></div></form></section>}
       </div>}
     </div>
+    {cropSource && <ImageCropDialog source={cropSource} locale={locale} onCancel={() => setCropSource(null)} onError={() => { setCropSource(null); showError(new Error(text.imageError)); }} onConfirm={(imageUrl) => { setDraft((current) => current ? { ...current, imageUrl } : current); setCropSource(null); }} />}
   </main>;
 }

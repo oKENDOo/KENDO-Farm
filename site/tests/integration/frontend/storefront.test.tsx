@@ -49,3 +49,17 @@ describe("storefront integration", () => {
     );
   });
 });
+
+  it("opens the full vegetable photo and closes it with the close button or Escape", () => {
+    window.localStorage.clear();
+    render(<Storefront catalog={{ ...demoCatalog, vegetables: [demoCatalog.vegetables[0]] }} isDemo={false} />);
+    const trigger = screen.getByRole("button", { name: "ดูรูป กรีนโอ๊ค แบบเต็ม" });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "กรีนโอ๊ค" })).toHaveAttribute("src", demoCatalog.vegetables[0].imageUrl);
+    fireEvent.click(screen.getByRole("button", { name: "ปิดรูป" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    fireEvent.click(trigger);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
